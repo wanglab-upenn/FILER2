@@ -1,0 +1,5 @@
+#GTEx_eQTL_v6_signif header (snp     gene    beta    t_stat  se      p_value nom_thresh      min_p   gene_emp_p      k       n       gene_q_value    beta_noNorm     snp_chrom       snp_pos minor_allele_samples    minor_allele_count    maf      ref_factor      ref     alt     snp_id_1kg_project_phaseI_v3    rs_id_dbSNP142_GRCh37p13        num_alt_per_site        has_best_p      is_chosen_snp   gene_name       gene_source     gene_chr      gene_start       gene_stop       orientation     tss_position    gene_type       gencode_attributes      tss_distance)
+#GADB header (chrom	chromStart	chromEnd	name	maf	strand	ref	alt	gene	gtex_attributes)
+
+#conversion script
+zcat input.snpgenes | awk 'BEGIN{FS="\t"; skip[14]=1; skip[15]=1; skip[18]=1; skip[20]=1; skip[21]=1; skip[1]=1; skip[2]=1;}{if (NR==1) {split($0,header,"\t"); next}; printf "chr%d\t%d\t%d\t%s\t%f\t%s\t%s\t%s\t%s\t", $14, $15-1, $15, $1, $18+0.0,".", $20, $21, $2; gsub(";", ",", $35); gsub(/,$/,"",$35); for (i=1; i<=NF; ++i) {if (skip[i]!=1) printf "%s=%s;", header[i], $i;}; printf "\n"; }'

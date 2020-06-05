@@ -1,0 +1,7 @@
+[05/28/2020 12:38:28]	Installing GADB
+[05/28/2020 12:38:28]	Log file: GADB_install.12-38-28-28-05-20.log
+[05/28/2020 12:38:28]	Using metadata=https://tf.lisanwanglab.org/GADB/metadata/gadb.test.hg19.template
+[05/28/2020 12:38:28]	Target directory /mnt/data/gadb.test_install already exist
+[05/28/2020 12:38:28]	Please set forceOverwrite=1 to overwrite this directory.
+[05/28/2020 12:38:28]	WARNING: with forceOverwrite set to 1 ALL data in the directory will be DELETED.
+[05/28/2020 12:38:28]	Please set forceRestart=1 to continue.
