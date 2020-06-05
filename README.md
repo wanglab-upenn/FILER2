@@ -1,3 +1,9 @@
+# [FILER: Functional genomics repository](https://lisanwanglab.org/FILER)
+
+## About
+
+This repository contains scripts that can be used to deploy FILER and to prepare and preprocess data for use with FILER.
+
 ## Deploying FILER
 
 ### Requirements:
