@@ -60,6 +60,7 @@ if [ -d "${TARGETDIR}" ]; then
 fi
 
 mkdir -p "${TARGETDIR}"
+mkdir -p "${TARGETDIR}/metadata"
 
 ANNOTDIR=$( cd "$TARGETDIR" && pwd ) # get absolute path for TARGET dir 
 
@@ -76,7 +77,7 @@ if [ ${isURL} = 1 ]; then
   wget -N "${ANNOT_URL}" -P "$TARGETDIR/metadata/"
 else
 	# local file is provided: copy it into metadata/ dir
-	cp "${ANNOT_URL}" "${TARGETDIR}/metadata"
+	cp "${ANNOT_URL}" "${TARGETDIR}/metadata/"
 fi
 
 # template and final meta files
