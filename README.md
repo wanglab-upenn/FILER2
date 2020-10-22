@@ -2,41 +2,51 @@
 
 ## About
 
-This repository contains scripts that can be used to deploy FILER and to prepare and preprocess data for use with FILER.
+This repository contains scripts that can be used to 
+1. deploy FILER on local server or cloud and
+2. to prepare and preprocess data for use with FILER.
 
 ## Deploying FILER
 
 ### Requirements:
-1. Storage: FILER requires at least XXX GB of disk space for each genome build.
-2. Bash
-3. [Giggle](https://github.com/chienyuehlee/giggle)
-4. [tabix](https://github.com/samtools/htslib)
-5. wget
-6. md5sum
+1. Storage: FILER requires at least 2500 GB of disk space for each genome build.
+2. Operating system: Linux (tested using Ubuntu and CentOS).
+3. Bash
+4. [Giggle](https://github.com/chienyuehlee/giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
+5. [tabix](https://github.com/samtools/htslib)
+6. wget
+7. md5sum
 
-To create a local copy of FILER (or particular FILER data source) for use with
-custom analysis pipelines, `install_annot.sh` script can be used.
-This script will 1) download FILER tracks and re-create FILER directory structure under specified target directory and 2) index data using Giggle.
+To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
+custom analysis pipelines, the provided `install_annot.sh` script can be used.
+This script will 
+1) download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
+2) index FILER data collections using Giggle
 
-USAGE:
+`install_annot.sh` USAGE:
 ```
 bash install_annot.sh <target_FILER_dir> <FILER_metadata_url|FILER_metadata_file>
 ```
 
-For example, to install latest GRCh37/hg19 FILER tracks into FILER/ directory:
+For example, to install the latest GRCh37/hg19 FILER tracks into FILER/ directory on your server:
 
 ```
-bash install_annot.sh FILER https://tf.lisanwanglab.org/FILER/metadata/gadb.latest.hg19.template
+bash install_annot.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
 ```
 
-To install latest GRCh38/hg38 FILER annotation data:
+To install the latest GRCh38/hg38 FILER annotation data:
 ```
-bash install_annot.sh FILER https://tf.lisanwanglab.org/FILER/metadata/gadb.latest.hg38.template
+bash install_annot.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
+```
+Similarly, the lifted GRCh38/hg38 FILER data can be installed using
+```
+bash install_annot.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template
 ```
 
-NOTE: While FILER data can be stored in any directory with sufficient space
+
+NOTE: While FILER data can be stored in any directory with the sufficient space (see Storage requirements)
 on the target machine/server (e.g., `/mnt/data/FILER`),
-as *absolute paths* are used to create Giggle indexes,
+as *absolute paths* are used to create Giggle indexes for FILER datasets,
 the data should not be moved to another place after indexing,
 otherwise Giggle re-indexing will be required.
 
