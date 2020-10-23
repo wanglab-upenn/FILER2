@@ -44,13 +44,13 @@ Similarly, the lifted GRCh38/hg38 FILER data can be installed using
 bash install_annot.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template
 ```
 
-## Staging data subset
-Downloading and indexing steps are guided by the provided metadata file.
+## Staging a custom subset of the FILER data 
+Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
 To install/deploy only a subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_annot.sh`.
 For example, to only deploy ENCODE ChIP-seq data
 please first generate corresponding template file with the desired subset of tracks, e.g., 
 ```
-awk 'BEGIN{FS="\t"}{if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dataSource=="ENCODE" && assay=="ChIP-seq") print}' filer.latest.hg38.template > filer.encode_chipseq.hg38.template
+awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dataSource=="ENCODE" && assay=="ChIP-seq") print; }' filer.latest.hg38.template > filer.encode_chipseq.hg38.template
 ```
 and use the new template file with the `install_gadb.sh`:
 ```
