@@ -3,6 +3,7 @@
 ## About
 
 This repository contains scripts that can be used to 
+
 1. deploy FILER on local server or cloud and
 2. to prepare and preprocess data for use with FILER.
 
@@ -43,6 +44,18 @@ Similarly, the lifted GRCh38/hg38 FILER data can be installed using
 bash install_annot.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template
 ```
 
+## Staging data subset
+Downloading and indexing steps are guided by the provided metadata file.
+To install/deploy only a subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_annot.sh`.
+For example, to only deploy ENCODE ChIP-seq data
+please first generate corresponding template file with the desired subset of tracks, e.g., 
+```
+awk 'BEGIN{FS="\t"}{if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dataSource=="ENCODE" && assay=="ChIP-seq") print}' filer.latest.hg38.template > filer.encode_chipseq.hg38.template
+```
+and use the new template file with the `install_gadb.sh`:
+```
+bash install_annot.sh FILER_ENCODE_ChIP_seq filer.encode_chipseq.hg38.template
+```
 
 NOTE: While FILER data can be stored in any directory with the sufficient space (see Storage requirements)
 on the target machine/server (e.g., `/mnt/data/FILER`),
