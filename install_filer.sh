@@ -47,7 +47,7 @@ set -e
 if [ -d "${TARGETDIR}" ]; then
   if [ "${forceOverwrite}" = 1 ]; then
 	  echo "WARNING: OVERWRITING existing directory $TARGETDIR"
-	  rm -r "${TARGETDIR}"
+	  rm -rf "${TARGETDIR}"/*
 	elif [ "${forceRestart}" = 1 ]; then
 	  echo "WARNING: CONTINUING within existing directory";
 	else

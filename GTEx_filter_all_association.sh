@@ -2,7 +2,7 @@
 #zcat Adipose_Subcutaneous_Analysis.v6p.all_snpgene_pairs.sorted.bed.gz | awk '{pval=$8; if (pval<0.05) print}' | bgzip -c > Adipose_Subcutaneous_Analysis.v6p.all_snpgene_pairs.sorted.min_0p05.bed.gz
 
 set -eu
-gtexDir=/GADB/Downloads/GTEx/v6p/GTEx_Analysis_v6p_all-associations
+gtexDir=${1:-/Downloads/GTEx/v6p/GTEx_Analysis_v6p_all-associations}
 pval_thres=0.05
 OUTDIR="${gtexDir}/filtered"
 mkdir -p "${OUTDIR}"
