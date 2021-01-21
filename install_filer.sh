@@ -15,10 +15,13 @@ fi
 # input
 TARGETDIR=${1:-FILER}
 ANNOT_URL=${2:-https://tf.lisanwanglab.org/GADB/metadata/gadb.test.hg19.template}
+# hg19: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
+# hg38: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
+
 forceOverwrite=${3:-0} # set to 1 to OVERWRITE target dir/delete all data
 forceRestart=${4:-0}
 
-# metadata columns to be used for downloading
+# metadata columns to be used for downloading and installing
 fnameCol=3 # file name
 fsizeCol=18 # file size
 fpathCol=19 # file directory
