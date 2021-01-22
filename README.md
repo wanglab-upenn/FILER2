@@ -1,5 +1,7 @@
 # [FILER: Functional genomics repository](https://lisanwanglab.org/FILER)
 
+FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILER)
+
 ## About
 
 This repository contains scripts that can be used to 
@@ -13,7 +15,7 @@ This repository contains scripts that can be used to
 1. Storage: FILER requires at least 2500 GB of disk space for each genome build.
 2. Operating system: Linux (tested using Ubuntu and CentOS).
 3. Bash
-4. [Giggle](https://github.com/chienyuehlee/giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
+4. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 5. [tabix](https://github.com/samtools/htslib)
 6. wget
 7. md5sum
