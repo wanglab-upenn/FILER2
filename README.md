@@ -8,6 +8,7 @@ This repository contains scripts that can be used to
 
 1. deploy FILER on local server or cloud and
 2. to prepare and preprocess data for use with FILER.
+3. to query FILER track data and metadata (see `data_querying` scripts folder)
 
 ## Deploying FILER
 
