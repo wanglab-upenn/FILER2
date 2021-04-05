@@ -12,12 +12,17 @@ This repository contains scripts that can be used to
 
 ## Deploying FILER
 
-### Requirements:
+### Hardware requirements:
 1. Storage: FILER requires at least 2500 GB of disk space for each genome build.
-2. Operating system: Linux (tested using Ubuntu and CentOS).
-3. Bash
-4. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
-5. [tabix](https://github.com/samtools/htslib)
+2. RAM: 64GB (recommended minimum; tested with at least 64GB)
+3. CPU: 8-core (recommended minimum; tested on 8-core/16-thread Xeon)  
+
+### Software requirements:
+1. Operating system: Linux (tested using Ubuntu and CentOS).
+2. Bash
+3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
+4. [tabix](https://github.com/samtools/htslib)
+5. [samtools](http://www.htslib.org/download)
 6. wget
 7. md5sum
 
