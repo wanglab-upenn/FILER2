@@ -1,41 +1,109 @@
+#!/bin/bash
+set -e
 
-#TRACK=${1:-"/mnt/data2/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg38/1/ENCFF014TLB.bed.gz"}
-#/project/wang4/GADB/Annotationtracks/ENCODE/data/ChIP-seq/narrowpeak/hg38/1/ENCFF014TLB.bed.gz
-TRACKID=${1:-"NGEN000610"}
-REGION=${2:-"chr1:100000-1300000"}
+function Help()
+{
+	echo "Script: $script"
+	echo "Summary: return track records overlapping given interval" 
+	echo -n "USAGE: $script"
+	for p in "${!params[@]}"; do
+		echo -n " --$p <$p>"
+	done
+	echo "";
 
-SCHEMAS=/mnt/data2/GADB/supplementary/FILER_BED_schema.tsv
-METADATA=/mnt/data2/GADB/metadata/GADB_metadata_V1_final_9252020.with_data_classification_v4.with_fixed_data_source_names.tsv
+	for p in "${!params[@]}"; do
+		v="${params[$p]}"
+		IFS=$'\t' read -r req descr exampleVal defVal clVal < <(echo "${v}" | sed 's/;;;/\t/g') 
+		reqDisp="Required" && [ "${req}" = "o" ] && reqDisp="Optional"
+		echo "[$reqDisp] <$p> = ${descr}. Example: ${exampleVal}. Default: $defVal"
+	done | sort -k1,1r
+	exit 1
+}
 
+script=$(basename $0)
+# required|optional;;;description;;;example_value;;;default_value;;;command_line_value
+declare -A params=( [trackID]="r;;;FILER track identifier;;;NGEN000610;;;''" [region]="r;;;genomic coordinates;;;chr:100000-1300000;;;''" [includeMetadata]="o;;;binary variable, set to 1 to return track metadata;;;0 or 1;;;0" [outputFormat]="o;;;output format;;;bed or json;;;bed" [configFile]="r;;;FILER configuration file;;;gadb.ini;;;''" )
 
-TABIX=/usr/local/bin/tabix
-MLR=/mnt/data/bin/miller-5.10.0/bin/mlr
+[ $# -lt 6 ] && Help
 
-#echo "TRACKID=${TRACKID}"
-trackMetadataLine=$( awk 'BEGIN{FS="\t"; targetTrackID="'"${TRACKID}"'";}{ if (FNR==1) {print; next}; trackID=$1; if (trackID==targetTrackID) print }' "${METADATA}" | "${MLR}" --icsv --fs tab --ojson cat )
-#echo "${trackMetadataLine}"
-trackFormat=$( echo "${trackMetadataLine}" | "${MLR}" --ijson --fs tab --otsv cut -f "File format" | tail -n+2 )
+# read command line arguments
+while [ $# -gt 0 ]; do
+	if [[ $1 == "--help" ]]; then
+		Help
+	fi
+  if [[ $1 == "--"* ]]; then
+    param="${1#--}"
+		value="${2}"
+		if [ ${params[$param]+_} ]; then
+		  params[$param]="${params[$param]};;;${value}"
+		else
+			echo "***ERROR: Unknown option $param is specified."
+			exit 1
+		fi
+  fi
+  shift 2
+done
+
+for p in "${!params[@]}"; do
+	v=${params[$p]}
+	IFS=$'\t' read -r isReq descr exampleVal defVal clVal < <(echo "${v}" | sed 's/;;;/\t/g')
+	#echo -e "$isReq\t$descr\t$exampleVal\t$defVal\t$clVal"
+	if [ "${isReq}" = "r" ] && [ "${clVal}" = "" ]; then
+		echo "***ERROR: required parameter $p is not specified"
+		exit 1
+	fi
+	value=${clVal:-"${defVal}"}
+	declare $p="$value"
+done
+
+# read configuration and set metadata and tools locations
+source "${configFile}"
+
+SCHEMAS="${FILERTRACKSCHEMAS}" #/mnt/data2/GADB/supplementary/FILER_BED_schema.tsv
+METADATA="${FILERMETADATA}" #/mnt/data2/GADB/metadata/GADB_metadata_V1_final_9252020.with_data_classification_v4.with_fixed_data_source_names.tsv
+TABIX="${TABIX}" #/usr/local/bin/tabix
+MLR="${MLR}" #/mnt/data/bin/miller-5.10.0/bin/mlr
+JQ="${JQ}"
+
+# get track metadata based on track id; json format
+trackMetadataLine=$( awk 'BEGIN{FS="\t"; targetTrackID="'"${trackID}"'";}{ if (FNR==1) {print; next}; trackID=$1; if (trackID==targetTrackID) print }' "${METADATA}" | "${MLR}" --icsv --fs tab --ojson cat )
+
+# extract track file URL and (local) absolute path 
 trackURL=$( echo "${trackMetadataLine}" | "${MLR}" --ijson --fs tab --otsv cut -f "Processed File Download URL" | tail -n+2 )
-#echo "format=${trackFormat}"
-#echo "url=${trackURL}"
-trackSchema=$( awk 'BEGIN{FS="\t"; targetFormat="'"${trackFormat}"'"}{trackFormat=$1; if (trackFormat==targetFormat) {schema=$3; gsub(";","\t",schema); print schema}}' "${SCHEMAS}" )
-trackFile=$( echo "${trackMetadataLine}" | jq -r '.filepath + "/" + ."File name"' )
+trackFile=$( echo "${trackMetadataLine}" | "${JQ}" -r '.filepath + "/" + ."File name"' )
+
+# look-up track schema based on track file format
+trackFormat=$( echo "${trackMetadataLine}" | "${MLR}" --ijson --fs tab --otsv cut -f "File format" | tail -n+2 )
+trackSchema=$( awk 'BEGIN{FS="\t"; targetFormat="'"${trackFormat}"'"}{trackFormat=$1; if (trackFormat==targetFormat) {schema=$3; gsub(";","\t",schema); gsub("chrStart","start",schema); gsub("chrEnd","end",schema); print schema}}' "${SCHEMAS}" )
+
 TRACK="${trackFile}"
-#echo "schema=${trackSchema}"
-cmd="${TABIX} ${TRACK} ${REGION}"
-#echo "${cmd}"
-#"${TABIX}" "${TRACK}" "${REGION}" | "${MLR}" --icsv --fs tab --rs lf --ojson --jlistwrap cat
-#"${TABIX}" "${TRACK}" "${REGION}" | "${MLR}" --fs tab --rs lf --ojson --jlistwrap cat
-#echo -n "["
-echo "["
-echo "{"
-echo "\"type\" : \"bed\","
-echo "\"Identifier\" : \"${TRACKID}\","
-echo "\"url\" : \"${trackURL}\","
-echo "\"metadata\" : ${trackMetadataLine},"
-echo "\"features\" : ["
-#(echo "$trackSchema" && "${TABIX}" "${TRACK}" "${REGION}") | "${MLR}" --icsv --fs tab --rs lf --ojsonx --jlistwrap cat
-(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${REGION}) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | sed -z 's/}\n{/},\n{/g'
-echo "]"
-echo "}"
-echo "]"
+cmd="${TABIX} ${TRACK} ${region}"
+if [ "${outputFormat,,}" = "json" ]; then
+
+	if [ "${includeMetadata}" = "1" ]; then
+		# output metadata+features
+		#echo "["
+		echo "{"
+		echo "\"type\" : \"bed\","
+		echo "\"Identifier\" : \"${trackID}\","
+		echo "\"url\" : \"${trackURL}\","
+		echo "\"name\" : \"${trackID}\"," # will be use as track name by WashU browser
+		echo "\"metadata\" : ${trackMetadataLine},"
+		echo "\"features\" : ["
+		#(echo "$trackSchema" && "${TABIX}" "${TRACK}" "${region}") | "${MLR}" --icsv --fs tab --rs lf --ojsonx --jlistwrap cat
+		(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region}) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | sed -z 's/}\n{/},\n{/g'
+		echo "]"
+		echo "}"
+		#echo "]"
+	else
+		# output only features array
+		echo "["
+		(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region}) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | sed -z 's/}\n{/},\n{/g'
+		echo "]"
+	fi
+
+else
+  # output BED format
+  echo "#${trackSchema}"
+  "$TABIX" "${TRACK}" $region
+fi
