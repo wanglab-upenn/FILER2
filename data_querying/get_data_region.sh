@@ -59,10 +59,10 @@ done
 # read configuration and set metadata and tools locations
 source "${configFile}"
 
-SCHEMAS="${FILERTRACKSCHEMAS}" #/mnt/data2/GADB/supplementary/FILER_BED_schema.tsv
-METADATA="${FILERMETADATA}" #/mnt/data2/GADB/metadata/GADB_metadata_V1_final_9252020.with_data_classification_v4.with_fixed_data_source_names.tsv
-TABIX="${TABIX}" #/usr/local/bin/tabix
-MLR="${MLR}" #/mnt/data/bin/miller-5.10.0/bin/mlr
+SCHEMAS="${FILERTRACKSCHEMAS}" 
+METADATA="${FILERMETADATA}" 
+TABIX="${TABIX}" 
+MLR="${MLR}" 
 JQ="${JQ}"
 
 # get track metadata based on track id; json format
