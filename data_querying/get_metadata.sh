@@ -1,16 +1,25 @@
-filterString=${1:-".metadata.\"Data source\"==\"DASHR2\""}
+filterString=${1:-"."}
 genomeBuild=${2:-"hg19"}
-outDir=${3:-"out_metadata"}
-configFile=${4:-"gadb.ini"}
+configFile=${3:-"filer.ini"}
+
+if [ $# -lt 3 ]; then
+  cat <<HELP
+Script: $(basename $0)
+Summary: retrieve track metadata for a given genome build and track filter
+USAGE: $0 <filter_string> <genome_build> <config_file>
+		<filter_string> = jq track filter string. Example ."Data Source" == "DASHR2". Set to "." to retrieve all tracks.
+		<genome_build> = hg19|hg38
+		<config_file> = FILER config file
+Example:
+    bash $0 ".\"Data Source\" == \"DASHR2\"" hg19 filer.ini 
+HELP
+	exit 1
+fi
 
 source "${configFile}"
 metadataFile="${FILERMETADATA}"
+MLR="${MLR}"
+JQ="${JQ}"
 
-mkdir -p "${outDir}"
-
-metadataJSONprefix="${outDir}/filer.metadata"
-
-bash make_washu_hub.sh "${metadataFile}" "${metadataJSONprefix}"
-outJSON="${metadataJSONprefix}.${genomeBuild}.json"
-"${JQ}" '[.[] | select( '"${filterString}"' )]' "${outJSON}" > "${outJSON%.json}.filtered.json"
+"${MLR}" --icsv --fs tab --rs lf --ojson --jlistwrap cat "${metadataFile}" | "${JQ}" '[ .[] | select( ."Genome build" == "'"${genomeBuild}"'" and ('"${filterString}"') ) ]'
 
