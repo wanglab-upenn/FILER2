@@ -5,6 +5,7 @@ function Help()
 {
 	echo "Script: $script"
 	echo "Summary: return track records overlapping given interval" 
+	echo ""
 	echo -n "USAGE: $script"
 	for p in "${!params[@]}"; do
 		echo -n " --$p <$p>"
@@ -17,6 +18,9 @@ function Help()
 		reqDisp="Required" && [ "${req}" = "o" ] && reqDisp="Optional"
 		echo "[$reqDisp] <$p> = ${descr}. Example: ${exampleVal}. Default: $defVal"
 	done | sort -k1,1r
+	echo ""
+	echo "Examples:"
+  echo "bash get_data_region.sh --trackID NGEN000611 --region \"chr1:50000-1500000\" --includeMetadata 0 --outputFormat bed --configFile gadb.ini"
 	exit 1
 }
 
@@ -62,7 +66,7 @@ source "${configFile}"
 SCHEMAS="${FILERTRACKSCHEMAS}" 
 METADATA="${FILERMETADATA}" 
 TABIX="${TABIX}" 
-MLR="${MLR}" 
+MLR="${MLR}"
 JQ="${JQ}"
 
 # get track metadata based on track id; json format

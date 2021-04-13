@@ -37,16 +37,6 @@ declare -A params=( [region]="r;;;genomic region;;;chr1:1103243-1103332;;;''" [g
 
 [ $# -lt 10 ] && Help 
 
-#region=${1:-"chr1:1103243-1103332"} # query interval (1-based!!!)
-#giggleIndexList=$2 # list of giggle indexes to query
-#outputDir=${3:-"query_out"}
-#njobs=${4:-16} # number jobs (giggle queries) to run in parallel
-#forceOverwrite=${5:-0} # set to 1 to overwrite ouput directory if it exists
-#genomeBuild=$6
-#filterString=${7:-""} # jq track filter string
-#configFile=${8:-"filer.ini"}
-
-
 # read command line arguments
 while [ $# -gt 0 ]; do
 	if [[ $1 == "--help" ]]; then
@@ -75,9 +65,6 @@ for p in "${!params[@]}"; do
 	value=${clVal:-"${defVal}"}
 	declare $p="$value"
 done
-
-
-
 
 # output files
 giggleOutFileList="${outputDir}/giggle_output_file_list.txt"
@@ -191,10 +178,12 @@ awk 'BEGIN{FS="\t";OFS="\t"; overlappingTracksMetadata="'${overlappingTracksMeta
 			 } 
 		 }' "${overlappingTracks}" "${FILERMETA}"
 
-#bash make_washu_hub.sh "${overlappingTracksMetadata}" "${overlappingTracksMetadata%.tsv}"
-# filter JSON
+## make final track metadata JSON with all overlapping tracks subject to filtering criteria (filterString) if any
 outJSON="${overlappingTracksMetadata%.tsv}.${genomeBuild}.json"
+outJSONfiltered="${outJSON%.json}.filtered.json"
+outTSVfiltered="${outJSONfiltered%.json}.tsv"
 "${MLR}" --icsv --fs tab --rs lf --ojson --jlistwrap cat "${overlappingTracksMetadata}" > "${outJSON}"
-"${JQ}" '[.[] | select( '"${filterString}"' )]' "${outJSON}" > "${outJSON%.json}.filtered.json"
-echo "Overlapping tracks metadata (tsv): ${overlappingTracksMetadata}" >> "${runSummary}"
-echo "Overlapping tracks metadata (JSON): ${outJSON%.json}.filtered.json" >> "${runSummary}"
+"${JQ}" '[.[] | select( '"${filterString}"' )]' "${outJSON}" > "${outJSONfiltered}"
+"${MLR}" --ijson --otsv cat "${outJSONfiltered}" > "${outTSVfiltered}"
+echo "Overlapping tracks metadata (tsv): ${outTSVfiltered}" >> "${runSummary}"
+echo "Overlapping tracks metadata (JSON): ${outJSONfiltered}" >> "${runSummary}"
