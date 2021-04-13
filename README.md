@@ -71,3 +71,67 @@ as *absolute paths* are used to create Giggle indexes for FILER datasets,
 the data should not be moved to another place after indexing,
 otherwise Giggle re-indexing will be required.
 
+## Command-line FILER data access
+
+Command-line scripts for accessing/querying FILER data are available under `data_querying` directory of FILER repository.
+Individual track data and track metadata can be accessed using the 
+`get_region_data.sh` and `get_metadata.sh` scripts.
+Tracks in FILER can also be queried by a genomic interval of interest using the `get_overlapping_tracks_by_coord.sh` script.
+
+### Retrieving track data for a particular genomic region
+
+```
+bash data_querying/get_data_region.sh
+Script: get_data_region.sh
+Summary: return track records overlapping given interval
+
+USAGE: get_data_region.sh --configFile <configFile> --region <region> --trackID <trackID> --includeMetadata <includeMetadata> --outputFormat <outputFormat>
+[Required] <configFile> = FILER configuration file. Example: gadb.ini. Default: ''
+[Required] <region> = genomic coordinates. Example: chr:100000-1300000. Default: ''
+[Required] <trackID> = FILER track identifier. Example: NGEN000610. Default: ''
+[Optional] <includeMetadata> = binary variable, set to 1 to return track metadata. Example: 0 or 1. Default: 0
+[Optional] <outputFormat> = output format. Example: bed or json. Default: bed
+
+Examples:
+bash get_data_region.sh --trackID NGEN000611 --region "chr1:50000-1500000" --includeMetadata 0 --outputFormat bed --configFile gadb.ini
+```
+
+### Retrieving track metadata
+
+```
+bash data_querying/get_metadata.sh
+Script: get_metadata.sh
+Summary: retrieve track metadata for a given genome build and track filter
+
+USAGE: data_querying/get_metadata.sh <filter_string> <genome_build> <config_file>
+	<filter_string> = jq track filter string. Example ."Data Source" == "DASHR2". Set to "." to retrieve all tracks.
+	<genome_build> = hg19|hg38
+	<config_file> = FILER config file
+
+Example:
+    bash data_querying/get_metadata.sh ".\"Data Source\" == \"DASHR2\"" hg19 filer.ini
+```
+
+### Retrieving FILER tracks overlapping a given genomic region
+
+```
+bash data_querying/get_overlapping_tracks_by_coord.sh
+Script: get_overlapping_tracks_by_coord.sh
+Summary: return track records overlapping given interval
+USAGE: get_overlapping_tracks_by_coord.sh --forceOverwrite <forceOverwrite> --genomeBuild <genomeBuild> --configFile <configFile> --giggleIndexList <giggleIndexList> --filterString <filterString> --region <region> --outputDir <outputDir> --njobs <njobs>
+[Required] <configFile> = FILER config file. Example: filer.ini. Default: ''
+[Required] <genomeBuild> = genome build. Example: hg19|hg38. Default: ''
+[Required] <giggleIndexList> = list of giggle index directories to search. Example: giggle_index_list.txt. Default: ''
+[Required] <outputDir> = output directory. Example: query_out. Default: ''
+[Required] <region> = genomic region. Example: chr1:1103243-1103332. Default: ''
+[Optional] <filterString> = jq track filter string. Example: ."Data Source"=="DASHR2". Default: .
+[Optional] <forceOverwrite> = set to 1 to overwrite output directory if it exists. Example: 0|1. Default: 0
+[Optional] <njobs> = number of jobs (giggle queries) to run in parallel. Example: 16. Default: 16
+
+Examples:
+
+bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini
+
+bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini --filterString ".\"Data Source\" == \"DASHR2\"" --forceOverwrite 1
+```
+
