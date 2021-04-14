@@ -18,8 +18,8 @@ This repository contains scripts that can be used to
 3. CPU: 8-core (recommended minimum; tested on 8-core/16-thread Xeon)  
 
 ### Software requirements:
-1. Operating system: Linux (tested using Ubuntu and CentOS).
-2. Bash
+1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
+2. Bash v4.3+
 3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
 5. [samtools](http://www.htslib.org/download)
