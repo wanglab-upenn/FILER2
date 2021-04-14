@@ -145,3 +145,7 @@ Example configuration file is given in the provided `data/filer.example.ini`.
 Please set locations of the programs/tools in the config file to the locations in your system.
 The configuration file is also used to specify FILER data and metadata location and other attributes.
 
+##Citation
+If you use FILER functional genomics database in your research, please cite:
+
+P. P. Kuksa, P. Gangadharan, Z. Katanic, L. Kleidermacher, A. Amlie-Wolf, C.-Y. Lee, E. Greenfest-Allen, O. Valladares, Y. Y. Leung, L.-S. Wang. FILER: Integrated, large-scale Functional genomics repository. 2020 [https://doi.org/10.1101/2021.01.22.427681](https://doi.org/10.1101/2021.01.22.427681)
