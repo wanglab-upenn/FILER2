@@ -23,16 +23,19 @@ This repository contains scripts that can be used to
 3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
 5. [samtools](http://www.htslib.org/download)
-6. wget
-7. md5sum
+6. jq
+7. mlr
+8. wget
+9. md5sum
 
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
 custom analysis pipelines, the provided `install_filer.sh` script can be used.
 This script will 
 1) download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
-2) index FILER data collections using Giggle
+2) index FILER data collections using Giggle `install_filer.sh`.
 
-`install_filer.sh` USAGE:
+USAGE:
+
 ```
 bash install_filer.sh <target_FILER_dir> <FILER_metadata_url|FILER_metadata_file>
 ```
@@ -53,6 +56,7 @@ bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.late
 ```
 
 ## Staging a custom subset of the FILER data 
+
 Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
 To install/deploy only a subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
 For example, to only deploy ENCODE ChIP-seq data
@@ -134,4 +138,10 @@ bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggle
 
 bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini --filterString ".\"Data Source\" == \"DASHR2\"" --forceOverwrite 1
 ```
+
+### Setting up configuration file
+
+Example configuration file is given in the provided `data/filer.example.ini`.
+Please set locations of the programs/tools in the config file to the locations in your system.
+The configuration file is also used to specify FILER data and metadata location and other attributes.
 
