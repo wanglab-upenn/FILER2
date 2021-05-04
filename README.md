@@ -12,13 +12,13 @@ This repository contains scripts that can be used to
 
 ## Deploying FILER <a name="fulldeployment"></a>
 
-### Hardware requirements: <a name="#hardware-req"></a>
+### Hardware requirements: <a name="hardware-req"></a>
 1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#customstaging) section will require less space.
  
 2. RAM: 64GB (recommended; tested with at least 64GB)
 3. CPU: 8-core (recommended; tested on 8-core/16-thread Xeon CPU)  
 
-### Software requirements: <a name="#software-req"></a>
+### Software requirements: <a name="software-req"></a>
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
 **NOTE**: As FILER scripts are Bash-based, macOS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using brew (`brew install bash`, `brew install wget`), and from the repositories listed below.
 2. Bash v4.3+. NOTE: updated Bash is required.  
@@ -151,8 +151,9 @@ The configuration file is also used to specify FILER data and metadata location 
 
 ## Frequently Asked Questions (FAQ)
 
-Q1. How can I download individual FILER tracks?
-A1. Individual tracks can be downloaded in several ways:
+**Q1**. How can I download individual FILER tracks?
+**A1**. Individual tracks can be downloaded in several ways:
+
 1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
 2. Using download link provided in the FILER metadata table (see *Processsed File Download URL* column)
 3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.
