@@ -35,8 +35,8 @@ This will create full copy of the FILER on your server/cluster. See [Hardware](#
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
 custom analysis pipelines, the provided `install_filer.sh` script can be used.
 This script will 
-1) download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
-2) index FILER data collections using Giggle `install_filer.sh`.
+1. download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
+2. index FILER data collections using Giggle `install_filer.sh`.
 
 USAGE:
 
@@ -148,6 +148,16 @@ bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggle
 Example configuration file is given in the provided `data/filer.example.ini`.
 Please set locations of the programs/tools in the config file to the locations in your system.
 The configuration file is also used to specify FILER data and metadata location and other attributes.
+
+## Frequently Asked Questions (FAQ)
+
+Q1. How can I download individual FILER tracks?
+A1. Individual tracks can be downloaded in several ways:
+1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
+2. Using download link provided in the FILER metadata table (see *Processsed File Download URL* column)
+3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.
+
+
 
 ## Citation
 If you use FILER functional genomics database in your research, please cite:
