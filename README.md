@@ -37,6 +37,7 @@ This will create full copy of the FILER on your server/cluster. See [Hardware](#
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
 custom analysis pipelines, the provided `install_filer.sh` script can be used.
 This script will 
+
 1. download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
 2. index FILER data collections using Giggle `install_filer.sh`.
 
