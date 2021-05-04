@@ -161,7 +161,8 @@ The configuration file is also used to specify FILER data and metadata location 
 2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column)
 3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.
 
-### **Q2**. Running FILER script fails with an error message: `declare: -A: invalid option`
+### **Q2**. Running FILER script fails with an error message:
+e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
 
 **A2**. FILER scripts require Bash v4.3+. Please check `bash --version` and update if necessary (e.g., using `brew install bash` on Mac OS, `yum update bash` on Cent OS, `apt-get install --only-upgrade bash` for Ubuntu)
 
