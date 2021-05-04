@@ -13,7 +13,9 @@ This repository contains scripts that can be used to
 ## Deploying FILER
 
 ### Hardware requirements:
-1. Storage: FILER requires at least 2500 GB of disk space for each genome build.
+1. Storage: Recommended disk space for *full* installation of FILER is 2500 GB for each genome build.
+ [Staging of a subset of FILER data](#staging-a-custom-subset-of-the-filer-data) will require less space.
+ 
 2. RAM: 64GB (recommended minimum; tested with at least 64GB)
 3. CPU: 8-core (recommended minimum; tested on 8-core/16-thread Xeon)  
 
