@@ -154,13 +154,16 @@ The configuration file is also used to specify FILER data and metadata location 
 ## Frequently Asked Questions (FAQ)
 
 **Q1**. How can I download individual FILER tracks?
+
 **A1**. Individual tracks can be downloaded in several ways:
 
 1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
 2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column)
 3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.
 
+**Q2**. Running FILER script fails with an error message: `declare: -A: invalid option`
 
+**A2**. FILER scripts require Bash v4.3+. Please check `bash --version` and update if necessary (e.g., using `brew install bash` on Mac OS, `yum update bash` on Cent OS or RedHat-based OSs)
 
 ## Citation
 If you use FILER functional genomics database in your research, please cite:
