@@ -12,6 +12,8 @@ This repository contains scripts that can be used to
 
 ## Deploying FILER <a name="fulldeployment"></a>
 
+FILER supports installation on a local server of [a full copy of all FILER tracks](#fulldeployment) or of [a custom subset of FILER data](#customstaging). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#hardware-req) and [Software](#software-req) sections for requirements/prerequisites for a successful installation.
+
 ### Hardware requirements: <a name="hardware-req"></a>
 1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#customstaging) section will require less space.
  
@@ -20,7 +22,7 @@ This repository contains scripts that can be used to
 
 ### Software requirements: <a name="software-req"></a>
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
-**NOTE**: As FILER scripts are Bash-based, macOS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using brew (`brew install bash`, `brew install wget`), and from the repositories listed below.
+**NOTE**: As FILER scripts are Bash-based, Mac OS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using brew (`brew install bash`, `brew install wget`), and from the repositories listed below.
 2. Bash v4.3+. NOTE: updated Bash is required.  
 3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
@@ -155,7 +157,7 @@ The configuration file is also used to specify FILER data and metadata location 
 **A1**. Individual tracks can be downloaded in several ways:
 
 1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
-2. Using download link provided in the FILER metadata table (see *Processsed File Download URL* column)
+2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column)
 3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.
 
 
