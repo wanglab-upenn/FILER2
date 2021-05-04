@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+bashVer=${BASH_VERSINFO[0]}
+if [ "${bashVer}" -lt 4 ]; then
+	  echo "ERROR: Bash version 4+ is required to run this script (bash version ${bashVer} is detected)."
+		exit 1
+fi
+
 function Help()
 {
 	echo "Script: $script"

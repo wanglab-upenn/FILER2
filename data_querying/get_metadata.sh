@@ -2,6 +2,13 @@ filterString=${1:-"."}
 genomeBuild=${2:-"hg19"}
 configFile=${3:-"filer.ini"}
 
+
+bashVer=${BASH_VERSINFO[0]}
+if [ "${bashVer}" -lt 4 ]; then
+	  echo "ERROR: Bash version 4+ is required to run this script (bash version ${bashVer} is detected)."
+		exit 1
+fi
+
 if [ $# -lt 3 ]; then
   cat <<HELP
 Script: $(basename $0)
