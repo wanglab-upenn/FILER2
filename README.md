@@ -12,15 +12,15 @@ This repository contains scripts that can be used to
 
 ## Deploying FILER <a name="fulldeployment"></a>
 
-### Hardware requirements:
-1. Storage: Recommended disk space for *full* installation of FILER is 2500 GB for each genome build. [Staging of a subset of FILER data](#customstaging) will require less space.
+### Hardware requirements: <a name="#hardware-req"></a>
+1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#customstaging) section will require less space.
  
 2. RAM: 64GB (recommended; tested with at least 64GB)
-3. CPU: 8-core (recommended; tested on 8-core/16-thread Xeon)  
+3. CPU: 8-core (recommended; tested on 8-core/16-thread Xeon CPU)  
 
-### Software requirements:
+### Software requirements: <a name="#software-req"></a>
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
-NOTE: As FILER scripts are Bash-based, macOS-based installation are possible, but require updated Bash (v4.3+), wget, which can be installed, e.g., using brew: `brew install bash`, `brew install wget`.
+**NOTE**: As FILER scripts are Bash-based, macOS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using brew (`brew install bash`, `brew install wget`), and from the repositories listed below.
 2. Bash v4.3+. NOTE: updated Bash is required.  
 3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
@@ -30,6 +30,8 @@ NOTE: As FILER scripts are Bash-based, macOS-based installation are possible, bu
 8. wget
 9. md5sum
 
+### Setting-up a full FILER instance
+This will create full copy of the FILER on your server/cluster. See [Hardware](#hardware-req) and [Software](#software-req) requirements/prerequisites for successful installation.
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
 custom analysis pipelines, the provided `install_filer.sh` script can be used.
 This script will 
