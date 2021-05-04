@@ -15,6 +15,7 @@ This repository contains scripts that can be used to
 ### Hardware requirements:
 1. Storage: Recommended disk space for *full* installation of FILER is 2500 GB for each genome build.
  [Staging of a subset of FILER data](#staging-a-custom-subset-of-the-filer-data) will require less space.
+ [Staging of a subset of FILER data](#customstaging) will require less space.
  
 2. RAM: 64GB (recommended minimum; tested with at least 64GB)
 3. CPU: 8-core (recommended minimum; tested on 8-core/16-thread Xeon)  
@@ -57,7 +58,7 @@ Similarly, the lifted GRCh38/hg38 FILER data can be installed using
 bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template
 ```
 
-## Staging a custom subset of the FILER data 
+## Staging a custom subset of the FILER data <a name="customstaging"></a>
 
 Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
 To install/deploy only a subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
