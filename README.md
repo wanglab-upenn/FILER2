@@ -10,19 +10,18 @@ This repository contains scripts that can be used to
 2. to prepare and preprocess data for use with FILER.
 3. to query FILER track data and metadata (see `data_querying` scripts folder)
 
-## Deploying FILER
+## Deploying FILER <a name="fulldeployment"></a>
 
 ### Hardware requirements:
-1. Storage: Recommended disk space for *full* installation of FILER is 2500 GB for each genome build.
- [Staging of a subset of FILER data](#staging-a-custom-subset-of-the-filer-data) will require less space.
- [Staging of a subset of FILER data](#customstaging) will require less space.
+1. Storage: Recommended disk space for *full* installation of FILER is 2500 GB for each genome build. [Staging of a subset of FILER data](#customstaging) will require less space.
  
-2. RAM: 64GB (recommended minimum; tested with at least 64GB)
-3. CPU: 8-core (recommended minimum; tested on 8-core/16-thread Xeon)  
+2. RAM: 64GB (recommended; tested with at least 64GB)
+3. CPU: 8-core (recommended; tested on 8-core/16-thread Xeon)  
 
 ### Software requirements:
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
-2. Bash v4.3+
+NOTE: As FILER scripts are Bash-based, macOS-based installation are possible, but require updated Bash (v4.3+), wget, which can be installed, e.g., using brew: `brew install bash`, `brew install wget`.
+2. Bash v4.3+. NOTE: updated Bash is required.  
 3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
 5. [samtools](http://www.htslib.org/download)
@@ -80,7 +79,7 @@ otherwise Giggle re-indexing will be required.
 
 ## Command-line FILER data access
 
-Command-line scripts for accessing/querying FILER data are available under `data_querying` directory of FILER repository.
+Command-line scripts for accessing/querying FILER data are available under `data_querying` directory of FILER repository. NOTE: before using command-line scripts, please first [set up a full FILER instance](#fulldeployment) or [stage custom subset FILER data](#customstaging).
 Individual track data and track metadata can be accessed using the 
 `get_region_data.sh` and `get_metadata.sh` scripts.
 Tracks in FILER can also be queried by a genomic interval of interest using the `get_overlapping_tracks_by_coord.sh` script.
