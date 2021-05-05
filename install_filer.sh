@@ -3,23 +3,43 @@ set -eu
 set -o pipefail
 
 time_stamp=$( date +%H-%M-%S-%d-%m-%y )
+
 # currently log file will be created in the current directory
 logFile="`pwd`/FILER_install.${time_stamp}.$$.log"
-exec 3>&1 1> >(awk '{print (strftime("[%m/%d/%Y %H:%M:%S]", systime()) "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
+exec 3>&1 4>&2 1> >(awk '{print (strftime("[%m/%d/%Y %H:%M:%S]", systime()) "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
 
-if [ $# -lt 2 ]; then
-	echo "USAGE: $0 <target_annot_dir> <template_metadata_URL> [<force_overwrite] [<force_continue>]"
+if [ $# -lt 3 ]; then
+	1>&4 echo "USAGE: $0 <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]"
+1>&4 cat << EXAMPLE
+
+Example:
+bash install_filer.sh FILER_test https://tf.lisanwanglab.org/GADB/metadata/test_metadata.hg19.template filer.ini
+where 
+1. FILER_test is the target directory for installing FILER data
+2. template points to the FILER metadata template file (URL or a local file)
+with TARGETDIR placeholder.
+   TARGETDIR placeholder in the template file will be replaced with the actual target directory (absolute path) to obtain a complete FILER metadata file.
+3. filer.ini is the configuration file with all the necessary parameters and paths for executables
+   See data/filer.example.ini for an example of the configuration file.
+EXAMPLE
+
 	exit 1
 fi
 
 # input
-TARGETDIR=${1:-FILER}
-ANNOT_URL=${2:-https://tf.lisanwanglab.org/GADB/metadata/gadb.test.hg19.template}
-# hg19: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
-# hg38: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
+TARGETDIR=${1:-FILER_test}
+ANNOT_URL=${2:-https://tf.lisanwanglab.org/GADB/metadata/test.metadata.hg19.template}
+CONFIG=${3:-filer.ini}
+# miniGADB hg19: https://tf.lisanwanglab.org/GADB/metadata/metadata.latest.hg19.template
+# miniGADB hg38: https://tf.lisanwanglab.org/GADB/metadata/metadata.latest.hg38.template
+# FILER hg19: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
+# FILER hg38: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
 
-forceOverwrite=${3:-0} # set to 1 to OVERWRITE target dir/delete all data
-forceRestart=${4:-0}
+forceOverwrite=${4:-0} # set to 1 to OVERWRITE target dir/delete all data
+forceRestart=${5:-0} # set to 1 to resume download/continue within existing directory
+skipDownload=${6:-0} # set to 1 to skip download and index only
+
+source "${CONFIG}"
 
 # metadata columns to be used for downloading and installing
 fnameCol=3 # file name
@@ -30,21 +50,23 @@ wgetCol=25 # wget command containing file url and target dir (relative path)
 
 echo "Installing FILER" 
 echo "Log file: ${logFile}"
-echo "Using metadata=${ANNOT_URL}" 
+echo "Using metadata template=${ANNOT_URL}" 
 
 # check if necessary commands are available
 set +e
-GIGGLE=$(command -v giggle) 
+#GIGGLE=$(command -v giggle) 
 if [ ! -x "${GIGGLE}" ]; then
   echo "ERROR: giggle not found, please make sure giggle is installed and is in the path"
   exit 1
 fi
-TABIX=$(command -v tabix)
+#TABIX=$(command -v tabix)
 if [ ! -x "${TABIX}" ]; then
-  echo "ERROR: tabix not found, please make sure giggle is installed and is in the path"
+  echo "ERROR: tabix not found, please make sure tabix is installed and is in the path"
   exit 1
 fi
 set -e
+echo "Using GIGGLE=${GIGGLE}"
+echo "Using TABIX=${TABIX}"
 
 # deal with the case when TARGET directory already exists
 if [ -d "${TARGETDIR}" ]; then
@@ -87,6 +109,14 @@ fi
 meta_file_template="$TARGETDIR/metadata/${ANNOT_URL##*/}"
 meta_file="${meta_file_template%.template}.tsv"
 
+
+if ! grep -q "TARGETDIR" "${meta_file_template}"; then
+	echo "ERROR: TARGETDIR is not found in the provided medatata file"
+	echo "Please provide *template* metadata file (with TARGETDIR placeholder)"
+	exit 1
+fi
+
+
 # replace TARGETDIR placeholder in template with actual FILER directory name
 export TARGETDIR="${ANNOTDIR}"
 cat "${meta_file_template}" | envsubst > "${meta_file}"
@@ -97,6 +127,9 @@ cat "${meta_file_template}" | envsubst > "${meta_file}"
 #   DNS failure
 # NOTE: cut output is in increasing column number order
 # it's important that fnameCol < md5Col < wgetCol
+
+if [ $skipDownload != 1 ]; then
+
 echo "Starting dowloading ..."
 tail -n+2 "${meta_file}" | cut -f${fnameCol},${fsizeCol},${md5Col},${wgetCol} | \
 	while IFS=$'\t' read -r fname fsize md5 wgetCmd; do
@@ -139,6 +172,8 @@ tail -n+2 "${meta_file}" | cut -f${fnameCol},${fsizeCol},${md5Col},${wgetCol} | 
 	done
 
 echo "Dowloading completed..." 
+
+fi # download
 
 # STEP 3: Index annotation tracks using Giggle
 
