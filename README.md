@@ -159,8 +159,8 @@ The configuration file is also used to specify FILER data and metadata location 
 **A1**. Individual tracks can be downloaded in several ways:
 
 1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
-2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column)
-3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.
+2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column, e.g., in [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) or [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER metadata tables)
+[//] # (3. Command-line: using wget command provided in the *wget command* column in the FILER metadata table.)
 
 ### **Q2**. Running FILER script fails with an error message:
 e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
