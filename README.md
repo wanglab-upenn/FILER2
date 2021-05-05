@@ -161,17 +161,18 @@ The configuration file is also used to specify FILER data and metadata location 
 1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
 2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column, e.g., in [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) or [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER metadata tables)
 
+### **Q2**. Running FILER script fails with an error message:
+e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
+
+**A2**. FILER scripts require Bash v4.3+. Please check `bash --version` and update if necessary (e.g., using `brew install bash` on Mac OS, `yum update bash` on Cent OS, `apt-get install --only-upgrade bash` for Ubuntu)
+
+
 ### **Q3**. How can I download a custom subset of FILER tracks?
 
 1. Website: Use data selectors/filters on [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) to filter tracks down to a desired set.
 Then click on *Download* button above the FILER track table to download FILER track metadata for the selected tracks. Column *Processed File Download URL* will contain download URLs for individual tracks. Alternatively, each track can be downloaded using *Download* link under *Download file* column.
 
 2. Command-line: using `bash install_filer.sh <filer_metadata_template_file>`. Template files for alll [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template FILER can be filtered to obtain a desired set of tracks before running `bash install_filer.sh` (see also section on [installing a custom subset of FILER tracks](#customstaging) for examples). 
-
-### **Q2**. Running FILER script fails with an error message:
-e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
-
-**A2**. FILER scripts require Bash v4.3+. Please check `bash --version` and update if necessary (e.g., using `brew install bash` on Mac OS, `yum update bash` on Cent OS, `apt-get install --only-upgrade bash` for Ubuntu)
 
 ## Citation
 If you use FILER functional genomics database in your research, please cite:
