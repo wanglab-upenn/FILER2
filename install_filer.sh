@@ -56,7 +56,7 @@ echo "Using metadata template=${ANNOT_URL}"
 set +e
 #GIGGLE=$(command -v giggle) 
 if [ ! -x "${GIGGLE}" ]; then
-  echo "ERROR: giggle not found, please make sure giggle is installed and is in the path"
+	echo "ERROR: giggle not found, please make sure FILER Giggle (https://github.com/pkuksa/FILER_giggle) is installed and is in the path"
   exit 1
 fi
 #TABIX=$(command -v tabix)
@@ -198,6 +198,10 @@ awk '{print ($1 "\t" NR)}' "${dirList}" | \
     echo "Indexing ${d} [$dirNum/$numDir]"
 
 		# remove index directory if exists
+		if [ -d "${indexDir}" ] && [ "${forceOverwrite}" = 1 ]; then
+			echo "Something is wrong. Found existing ${indexDir} while forceOvewrite was set to ${forceOverwrite}. Exiting..."
+			exit 1
+		fi
     if [ -d "${indexDir}" ]; then
       rm -r "${indexDir}"
     fi
