@@ -43,10 +43,11 @@ This configuration file is required to run FILER command line scripts.
 This will create full copy of the FILER on your server/cluster. See [Hardware](#hardware-req) and [Software](#software-req) requirements/prerequisites for successful installation.
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
 custom analysis pipelines, the provided `install_filer.sh` script can be used.
-This script will 
+The `install_filer.sh` script will 
 
 1. download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
-2. index FILER data collections using Giggle `install_filer.sh`.
+2. index FILER data collections using `giggle`
+3. index individual data tracks using `tabix`
 
 Basic usage:
 
