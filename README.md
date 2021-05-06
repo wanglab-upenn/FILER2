@@ -32,6 +32,13 @@ FILER supports installation on a local server of [a full copy of all FILER track
 8. wget
 9. md5sum
 
+### Setting up configuration file
+
+An example configuration file is given in the provided `data/filer.example.ini` file.
+Please update this file to set locations of the programs/tools in the config file to the locations in your system.
+The configuration file is also used to specify FILER data and metadata location and other attributes.
+This configuration file is required to run FILER command line scripts.
+
 ### Setting-up a full FILER instance
 This will create full copy of the FILER on your server/cluster. See [Hardware](#hardware-req) and [Software](#software-req) requirements/prerequisites for successful installation.
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
@@ -66,15 +73,21 @@ bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.late
 
 Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
 To install/deploy only a subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
-For example, to only deploy ENCODE ChIP-seq data
+For example, to only deploy GRCh38/hg38 ENCODE ChIP-seq data
 please first generate corresponding template file with the desired subset of tracks, e.g., 
 ```
 awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dataSource=="ENCODE" && assay=="ChIP-seq") print; }' filer.latest.hg38.template > filer.encode_chipseq.hg38.template
 ```
-and use the new template file with the `install_gadb.sh`:
+and use the new template file with the `install_filer.sh`:
 ```
-bash install_filer.sh FILER_ENCODE_ChIP_seq filer.encode_chipseq.hg38.template
+bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.template filer_config.ini
 ```
+
+Similarly, to obtain only GRCh38/hg38 ROADMAP enhancer tracks, prepare a metadata template file containing only the enhancer tracks of interest:
+```
+awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; if (dataSource=="ROADMAP_Enhancers") print; }' filer.latest.hg38.template > filer.roadmap_enhancers.hg38.template
+```
+and use the generated enhancer template file with the `install_filer.sh` to reproduce/download and index ROADMAP enhancer FILER tracks on your system.
 
 NOTE: While FILER data can be stored in any directory with the sufficient space (see Storage requirements)
 on the target machine/server (e.g., `/mnt/data/FILER`),
@@ -146,12 +159,6 @@ bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggle
 bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini --filterString ".\"Data Source\" == \"DASHR2\"" --forceOverwrite 1
 ```
 
-### Setting up configuration file
-
-Example configuration file is given in the provided `data/filer.example.ini`.
-Please set locations of the programs/tools in the config file to the locations in your system.
-The configuration file is also used to specify FILER data and metadata location and other attributes.
-
 ## Frequently Asked Questions (FAQ)
 
 ### **Q1**. How can I download individual FILER tracks?
@@ -173,7 +180,7 @@ e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
 Then click on *Download* button above the FILER track table to download FILER track metadata for the selected tracks. Column *Processed File Download URL* will contain download URLs for individual tracks, while column *wget command* will contain wget download commands. Importantly, these wget commands will reproduce FILER directory structures/data collections. Alternatively, each track can be downloaded using *Download* link under *Download file* column.
 
 
-2. Command-line: using `bash install_filer.sh <filer_metadata_template_file>`. Template metadata files are available for all [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template metadata files can be filtered to obtain a desired/specific set of tracks before running `bash install_filer.sh` (see also section on [installing a custom subset of FILER tracks](#customstaging) for an example). 
+2. Command-line: using `bash install_filer.sh <filer_metadata_template_file>`. Template metadata files are available for all [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template metadata files can be filtered to obtain a desired/specific set of tracks before running `bash install_filer.sh` (see section on [installing a custom subset of FILER tracks](#customstaging) for examples). 
 
 ## Citation
 If you use FILER functional genomics database in your research, please cite:
