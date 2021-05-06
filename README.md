@@ -32,7 +32,7 @@ FILER supports installation on a local server of [a full copy of all FILER track
 8. wget
 9. md5sum
 
-### Setting up configuration file
+### Setting up configuration file <a href="#configfile"></a>
 
 An example configuration file is given in the provided `data/filer.example.ini` file.
 Please update this file to set locations of the programs/tools in the config file to the locations in your system.
@@ -48,25 +48,42 @@ This script will
 1. download FILER tracks and re-create FILER directory structure under specified target directory (make sure there is enough space available; See Storage requirements) and
 2. index FILER data collections using Giggle `install_filer.sh`.
 
-USAGE:
+Basic usage:
 
 ```
-bash install_filer.sh <target_FILER_dir> <FILER_metadata_url|FILER_metadata_file>
+bash install_filer.sh <target_FILER_dir> <FILER_metadata_url|FILER_metadata_file> <FILER_config_file>
 ```
 
 For example, to install the latest GRCh37/hg19 FILER tracks into FILER/ directory on your server:
 
 ```
-bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
+bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template filer_config.ini
 ```
 
 To install the latest GRCh38/hg38 FILER annotation data:
 ```
-bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
+bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template filer_config.ini
 ```
 Similarly, the lifted GRCh38/hg38 FILER data can be installed using
 ```
-bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template
+bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template filer_config.ini
+```
+
+For an example of FILER configuration file please see `data/filer.example.ini`. To prepare configuration file for your system, please update this with the locations of executables/software on your system (see also section on [setting up configuration file](#configfile)).
+
+### Detailed `install_filer.sh` script usage
+```
+USAGE: install_filer.sh <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]
+
+Example:
+bash install_filer.sh FILER_test https://tf.lisanwanglab.org/GADB/metadata/test_metadata.hg19.template filer.ini
+where
+1. FILER_test is the target directory for installing FILER data
+2. template points to the FILER metadata template file (URL or a local file)
+with TARGETDIR placeholder.
+   TARGETDIR placeholder in the template file will be replaced with the actual target directory (absolute path) to obtain a complete FILER metadata file.
+3. filer.ini is the configuration file with all the necessary parameters and paths for executables
+   See data/filer.example.ini for an example of the configuration file.
 ```
 
 ## Staging a custom subset of the FILER data <a name="customstaging"></a>
@@ -110,14 +127,14 @@ Script: get_data_region.sh
 Summary: return track records overlapping given interval
 
 USAGE: get_data_region.sh --configFile <configFile> --region <region> --trackID <trackID> --includeMetadata <includeMetadata> --outputFormat <outputFormat>
-[Required] <configFile> = FILER configuration file. Example: gadb.ini. Default: ''
+[Required] <configFile> = FILER configuration file. Example: filer.ini. Default: ''
 [Required] <region> = genomic coordinates. Example: chr:100000-1300000. Default: ''
 [Required] <trackID> = FILER track identifier. Example: NGEN000610. Default: ''
 [Optional] <includeMetadata> = binary variable, set to 1 to return track metadata. Example: 0 or 1. Default: 0
 [Optional] <outputFormat> = output format. Example: bed or json. Default: bed
 
 Examples:
-bash get_data_region.sh --trackID NGEN000611 --region "chr1:50000-1500000" --includeMetadata 0 --outputFormat bed --configFile gadb.ini
+bash get_data_region.sh --trackID NGEN000611 --region "chr1:50000-1500000" --includeMetadata 0 --outputFormat bed --configFile filer.ini
 ```
 
 ### Retrieving track metadata
@@ -154,9 +171,9 @@ USAGE: get_overlapping_tracks_by_coord.sh --forceOverwrite <forceOverwrite> --ge
 
 Examples:
 
-bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini
+bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile filer.ini
 
-bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini --filterString ".\"Data Source\" == \"DASHR2\"" --forceOverwrite 1
+bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile filer.ini --filterString ".\"Data Source\" == \"DASHR2\"" --forceOverwrite 1
 ```
 
 ## Frequently Asked Questions (FAQ)
