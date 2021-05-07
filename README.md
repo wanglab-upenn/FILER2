@@ -6,9 +6,9 @@ FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILE
 
 This repository contains scripts that can be used to 
 
-1. deploy FILER on local server or cloud and
-2. to prepare and preprocess data for use with FILER.
-3. to query FILER track data and metadata (see `data_querying` scripts folder)
+1. deploy FILER on local server or cloud; 
+2. to prepare and preprocess data for use with FILER;
+3. to query FILER track data and metadata (see `data_querying` scripts folder).
 
 ## Deploying FILER <a name="fulldeployment"></a>
 
@@ -27,8 +27,8 @@ FILER supports installation on a local server of [a full copy of all FILER track
 3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
 5. [samtools](http://www.htslib.org/download)
-6. jq
-7. mlr
+6. [jq](https://stedolan.github.io/jq/download/)
+7. [Miller/mlr](https://github.com/johnkerl/miller)
 8. wget
 9. md5sum
 
@@ -90,7 +90,8 @@ with TARGETDIR placeholder.
 ## Staging a custom subset of the FILER data <a name="customstaging"></a>
 
 Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
-To install/deploy only a subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
+To install/deploy only a specific subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
+
 For example, to only deploy GRCh38/hg38 ENCODE ChIP-seq data
 please first generate corresponding template file with the desired subset of tracks, e.g., 
 ```
