@@ -122,6 +122,19 @@ fi
 export TARGETDIR="${ANNOTDIR}"
 cat "${meta_file_template}" | envsubst > "${meta_file}"
 
+# check if there is enough space for installation
+
+availableSpace=$(( $(stat -f --format="%a*%S" "${TARGETDIR}") )) # in bytes
+requiredSpace=$( awk 'BEGIN{FS="\t"; fsizeCol='${fsizeCol}'+0;}{ a+=$fsizeCol; }END{ print a }' ${meta_file} ) # in bytes
+echo "Available space=${availableSpace} bytes"
+echo "Required space=${requiredSpace} bytes"
+
+if [ "${availableSpace}" -lt "${requiredSpace}" ]; then
+	echo "ERROR: Available space may not be enough. Please make sure installation folder has enough space."
+	exit 1
+fi
+exit 1
+
 # STEP 2. Download annotation tracks
 
 # FIXME: handle re-download, partial download, .1, .2, etc files
