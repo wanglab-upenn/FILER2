@@ -32,6 +32,7 @@ FILER supports installation on a local server of [a full copy of all FILER track
 8. wget
 9. md5sum
 10. git
+11. [gawk](https://www.gnu.org/software/gawk/) v4.1+
 
 ### Setting up configuration file <a href="#configfile"></a>
 
