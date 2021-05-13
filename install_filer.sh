@@ -133,7 +133,6 @@ if [ "${availableSpace}" -lt "${requiredSpace}" ]; then
 	echo "ERROR: Available space may not be enough. Please make sure installation folder has enough space."
 	exit 1
 fi
-exit 1
 
 # STEP 2. Download annotation tracks
 
