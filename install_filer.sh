@@ -122,6 +122,8 @@ fi
 export TARGETDIR="${ANNOTDIR}"
 cat "${meta_file_template}" | envsubst > "${meta_file}"
 
+numTracks=$( wc -l "${meta_file}" | awk '{print ($1-1)}' )
+
 # check if there is enough space for installation
 
 #availableSpace=$(( $(stat -f --format="%a*%S" "${TARGETDIR}") )) # in bytes
@@ -139,19 +141,18 @@ fi
 
 # FIXME: handle re-download, partial download, .1, .2, etc files
 #   DNS failure
-# NOTE: cut output is in increasing column number order
-# it's important that fnameCol < md5Col < wgetCol
 
 if [ $skipDownload != 1 ]; then
 
 echo "Starting dowloading ..."
-tail -n+2 "${meta_file}" | cut -f${fnameCol},${fsizeCol},${md5Col},${wgetCol} | \
-	while IFS=$'\t' read -r fname fsize md5 wgetCmd; do
+	awk 'BEGIN{FS="\t";OFS="\t"; fnameCol='${fnameCol}'; fsizeCol='${fsizeCol}'; md5Col='${md5Col}'; wgetCol='${wgetCol}'}
+       { if (NR==1) next; print FNR-1, $fnameCol, $fsizeCol, $md5Col, $wgetCol; }' "${meta_file}" | \
+	while IFS=$'\t' read -r fnumber fname fsize md5 wgetCmd; do
      # download data track
 		 url=$( echo "${wgetCmd}" | awk '{print $2}' )
      tgDir=$( echo "${wgetCmd}" | awk '{print $4}')
 	   downloadedFile="${tgDir}/${fname}"
-		 echo "Dowloading ${url}"
+		 echo "Dowloading ${url} [${fnumber}/$numTracks]"
 		 if [ -f "${downloadedFile}" ]; then
 			 #existingFileSize=$( stat "${downloadedFile}" --print "%s\n" )
 			 existingFileSize=$( ls -Lon "${downloadedFile}" | awk '{print $4}' )
