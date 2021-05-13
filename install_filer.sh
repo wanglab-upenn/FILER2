@@ -13,7 +13,7 @@ if [ $# -lt 3 ]; then
 1>&4 cat << EXAMPLE
 
 Example:
-bash install_filer.sh FILER_test https://tf.lisanwanglab.org/GADB/metadata/test_metadata.hg19.template filer.ini
+bash install_filer.sh FILER_test https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template filer.ini
 where 
 1. FILER_test is the target directory for installing FILER data
 2. template points to the FILER metadata template file (URL or a local file)
@@ -34,6 +34,7 @@ CONFIG=${3:-filer.ini}
 # miniGADB hg38: https://tf.lisanwanglab.org/GADB/metadata/metadata.latest.hg38.template
 # FILER hg19: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
 # FILER hg38: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
+# test data: https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template
 
 forceOverwrite=${4:-0} # set to 1 to OVERWRITE target dir/delete all data
 forceRestart=${5:-0} # set to 1 to resume download/continue within existing directory
