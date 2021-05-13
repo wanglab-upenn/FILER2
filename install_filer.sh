@@ -154,7 +154,8 @@ tail -n+2 "${meta_file}" | cut -f${fnameCol},${fsizeCol},${md5Col},${wgetCol} | 
 	   downloadedFile="${tgDir}/${fname}"
 		 echo "Dowloading ${url}"
 		 if [ -f "${downloadedFile}" ]; then
-			 existingFileSize=$( stat "${downloadedFile}" --print "%s\n" )
+			 #existingFileSize=$( stat "${downloadedFile}" --print "%s\n" )
+			 existingFileSize=$( ls -Lon "${downloadedFile}" | awk '{print $4}' )
 			 if [ "${existingFileSize}" != "${fsize}" ]; then
 				 echo "***WARNING: file size mismatch: ${downloadedFile}"
 				 echo "expected file size=${fsize}"
@@ -168,7 +169,8 @@ tail -n+2 "${meta_file}" | cut -f${fnameCol},${fsizeCol},${md5Col},${wgetCol} | 
 		 wget -N "${url}" -P "${tgDir}"
 
 		 # check file size match
-		 existingFileSize=$( stat "${downloadedFile}" --print "%s\n" )
+		 #existingFileSize=$( stat "${downloadedFile}" --print "%s\n" )
+		 existingFileSize=$( ls -Lon "${downloadedFile}" | awk '{print $4}' )
 		 if [ "${existingFileSize}" != "${fsize}" ]; then
 				 echo "***WARNING: file size mismatch: ${downloadedFile}"
 				 echo "expected file size=${fsize}"
