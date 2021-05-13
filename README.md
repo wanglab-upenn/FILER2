@@ -79,7 +79,7 @@ For an example of FILER configuration file please see `data/filer.example.ini`. 
 USAGE: install_filer.sh <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]
 
 Example:
-bash install_filer.sh FILER_test https://tf.lisanwanglab.org/GADB/metadata/test_metadata.hg19.template filer.ini
+bash install_filer.sh FILER_test https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template filer.ini
 where
 1. FILER_test is the target directory for installing FILER data
 2. template points to the FILER metadata template file (URL or a local file)
