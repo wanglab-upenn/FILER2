@@ -31,6 +31,7 @@ FILER supports installation on a local server of [a full copy of all FILER track
 7. [Miller/mlr](https://github.com/johnkerl/miller)
 8. wget
 9. md5sum
+10. git
 
 ### Setting up configuration file <a href="#configfile"></a>
 
@@ -73,6 +74,7 @@ bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.late
 For an example of FILER configuration file please see `data/filer.example.ini`. To prepare configuration file for your system, please update this with the locations of executables/software on your system (see also section on [setting up configuration file](#configfile)).
 
 ### Detailed `install_filer.sh` script usage
+
 ```
 USAGE: install_filer.sh <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]
 
