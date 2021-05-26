@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
-
-bashVer=${BASH_VERSINFO[0]}
-if [ "${bashVer}" -lt 4 ]; then
-	  echo "ERROR: Bash version 4+ is required to run this script (bash version ${bashVer} is detected)."
-		exit 1
-fi
+set -o pipefail
 
 function Help()
 {
@@ -87,6 +82,12 @@ trackFormat=$( echo "${trackMetadataLine}" | "${MLR}" --ijson --fs tab --otsv cu
 trackSchema=$( awk 'BEGIN{FS="\t"; targetFormat="'"${trackFormat}"'"}{trackFormat=$1; if (trackFormat==targetFormat) {schema=$3; gsub(";","\t",schema); gsub("chrStart","start",schema); gsub("chrEnd","end",schema); print schema}}' "${SCHEMAS}" )
 
 TRACK="${trackFile}"
+if [ ! -s "${TRACK}" ]; then
+  # track not found?
+	echo "ERROR: requested track ${trackID} not found"
+	exit 1
+fi
+
 cmd="${TABIX} ${TRACK} ${region}"
 if [ "${outputFormat,,}" = "json" ]; then
 
