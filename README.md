@@ -90,7 +90,8 @@ with TARGETDIR placeholder.
    See data/filer.example.ini for an example of the configuration file.
 ```
 
-## Staging a custom subset of the FILER data <a name="customstaging"></a>
+## Staging a custom subset of the FILER data
+<a name="customstaging"></a>
 
 Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
 To install/deploy only a specific subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
