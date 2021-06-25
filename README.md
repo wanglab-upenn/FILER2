@@ -16,6 +16,8 @@ This repository contains scripts that can be used to
 
 FILER supports installation on a local server of [a full copy of all FILER tracks](#fulldeployment) or of [a custom subset of FILER data](#customstaging). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#hardware-req) and [Software](#software-req) sections for requirements/prerequisites for a successful installation.
 
+[custom staging](#markdown-header-Staging-a-custom-subset-of-the-FILER-data)
+
 ### Hardware requirements: <a name="hardware-req"></a>
 1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#customstaging) section will require less space.
  
