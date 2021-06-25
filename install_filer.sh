@@ -5,8 +5,10 @@ set -o pipefail
 time_stamp=$( date +%H-%M-%S-%d-%m-%y )
 
 # currently log file will be created in the current directory
+#logFile=$( mktemp FILER_install.${time_stamp}.$$.log.XXXXXXXXXX )
 logFile="`pwd`/FILER_install.${time_stamp}.$$.log"
-exec 3>&1 4>&2 1> >(gawk '{print (strftime("[%m/%d/%Y %H:%M:%S]", systime()) "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
+# exec 3>&1 4>&2 1> >(gawk '{print (strftime("[%m/%d/%Y %H:%M:%S]", systime()) "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
+exec 3>&1 4>&2 1> >(awk '{ "date +\"[%m/%d/%Y %H:%M:%S]\"" | getline time; print (time "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
 
 if [ $# -lt 3 ]; then
 	1>&4 echo "USAGE: $0 <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]"
@@ -123,6 +125,7 @@ export TARGETDIR="${ANNOTDIR}"
 cat "${meta_file_template}" | envsubst > "${meta_file}"
 
 numTracks=$( wc -l "${meta_file}" | awk '{print ($1-1)}' )
+echo "Found $numTracks track records in ${meta_file}"
 
 # check if there is enough space for installation
 
