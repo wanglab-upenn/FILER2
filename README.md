@@ -12,19 +12,19 @@ This repository contains scripts that can be used to
 2. to prepare and preprocess data for use with FILER;
 3. to query FILER track data and metadata (see `data_querying` scripts folder).
 
-## Deploying FILER <a name="fulldeployment"></a>
+## Deploying FILER
 
-FILER supports installation on a local server of [a full copy of all FILER tracks](#fulldeployment) or of [a custom subset of FILER data](#customstaging). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#hardware-req) and [Software](#software-req) sections for requirements/prerequisites for a successful installation.
+FILER supports installation on a local server of [a full copy of all FILER tracks](#markdown-header-deploying-filer) or of [a custom subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#markdown-header-hardware-requirements) and [Software](#markdown-header-software-requirements) sections for requirements/prerequisites for a successful installation.
 
 [custom staging](#markdown-header-staging-a-custom-subset-of-the-filer-data)
 
-### Hardware requirements: <a name="hardware-req"></a>
-1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#customstaging) section will require less space.
+### Hardware requirements
+1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data) section will require less space.
  
 2. RAM: 64GB (recommended; tested with at least 64GB)
 3. CPU: 8-core (recommended; tested on 8-core/16-thread Xeon CPU)  
 
-### Software requirements: <a name="software-req"></a>
+### Software requirements
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
 **NOTE**: As FILER scripts are Bash-based, Mac OS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using brew (`brew install bash`, `brew install wget`), and from the repositories listed below.
 2. Bash v4.3+. NOTE: updated Bash is required.  
@@ -38,7 +38,7 @@ FILER supports installation on a local server of [a full copy of all FILER track
 10. git
 11. [gawk](https://www.gnu.org/software/gawk/) v4.1+
 
-### Setting up configuration file <a href="#configfile"></a>
+### Setting up configuration file
 
 An example configuration file is given in the provided `data/filer.example.ini` file.
 Please update this file to set locations of the programs/tools in the config file to the locations in your system.
@@ -46,7 +46,7 @@ The configuration file is also used to specify FILER data and metadata location 
 This configuration file is required to run FILER command line scripts.
 
 ### Setting-up a full FILER instance
-This will create full copy of the FILER on your server/cluster. See [Hardware](#hardware-req) and [Software](#software-req) requirements/prerequisites for successful installation.
+This will create full copy of the FILER on your server/cluster. See [Hardware](#markdown-header-hardware-requirements) and [Software](#markdown-header-software-requirements) requirements/prerequisites for successful installation.
 To create a local copy of the entire FILER (or of a particular FILER data source(s)) for use with
 custom analysis pipelines, the provided `install_filer.sh` script can be used.
 The `install_filer.sh` script will 
@@ -76,7 +76,7 @@ Similarly, the lifted GRCh38/hg38 FILER data can be installed using
 bash install_filer.sh FILER https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38-lifted.template filer_config.ini
 ```
 
-For an example of FILER configuration file please see `data/filer.example.ini`. To prepare configuration file for your system, please update this with the locations of executables/software on your system (see also section on [setting up configuration file](#configfile)).
+For an example of FILER configuration file please see `data/filer.example.ini`. To prepare configuration file for your system, please update this with the locations of executables/software on your system (see also section on [setting up configuration file](#markdown-header-setting-up-configuration-file)).
 
 ### Detailed `install_filer.sh` script usage
 
@@ -95,7 +95,6 @@ with TARGETDIR placeholder.
 ```
 
 ## Staging a custom subset of the FILER data
-<a name="customstaging"></a>
 
 Downloading and indexing steps (see Deploying section) are guided by the provided metadata template file.
 To install/deploy only a specific subset of FILER data, metadata template files containing only tracks of interest can be provided as the input to `install_filer.sh`.
@@ -124,7 +123,7 @@ otherwise Giggle re-indexing will be required.
 
 ## Command-line FILER data access
 
-Command-line scripts for accessing/querying FILER data are available under `data_querying` directory of FILER repository. NOTE: before using command-line scripts, please first [set up a full FILER instance](#fulldeployment) or [stage custom subset FILER data](#customstaging).
+Command-line scripts for accessing/querying FILER data are available under `data_querying` directory of FILER repository. NOTE: before using command-line scripts, please first [set up a full FILER instance](#markdown-header-deploying-filer) or [stage custom subset FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data).
 Individual track data and track metadata can be accessed using the 
 `get_region_data.sh` and `get_metadata.sh` scripts.
 Tracks in FILER can also be queried by a genomic interval of interest using the `get_overlapping_tracks_by_coord.sh` script.
@@ -207,7 +206,7 @@ e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
 Then click on *Download* button above the FILER track table to download FILER track metadata for the selected tracks. Column *Processed File Download URL* will contain download URLs for individual tracks, while column *wget command* will contain wget download commands. Importantly, these wget commands will reproduce FILER directory structures/data collections. Alternatively, each track can be downloaded using *Download* link under *Download file* column.
 
 
-2. Using the command-line: Use `bash install_filer.sh <filer_metadata_template_file>`. Template metadata files are available for all [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template metadata files can be filtered to obtain a desired/specific subset of FILER tracks before running `bash install_filer.sh` (see also the section on [installing a custom subset of FILER tracks](#customstaging) for examples). 
+2. Using the command-line: Use `bash install_filer.sh <filer_metadata_template_file>`. Template metadata files are available for all [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg39](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template metadata files can be filtered to obtain a desired/specific subset of FILER tracks before running `bash install_filer.sh` (see also the section on [installing a custom subset of FILER tracks](#markdown-header-staging-a-custom-subset-of-the-filer-data) for examples). 
 
 ## Citation
 If you use FILER functional genomics database in your research, please cite:
