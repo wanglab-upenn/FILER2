@@ -1,8 +1,9 @@
+[TOC]
+
 # [FILER: Functional genomics repository](https://lisanwanglab.org/FILER)
 
 FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILER)
 
-[TOC]
 
 ## About
 
