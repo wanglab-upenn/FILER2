@@ -1,13 +1,12 @@
-filterString=${1:-"."}
+#!/bin/bash
+set -e
+
+filterString=${1:-"."} # jq filter string
 genomeBuild=${2:-"hg19"}
 configFile=${3:-"filer.ini"}
 
 
 bashVer=${BASH_VERSINFO[0]}
-if [ "${bashVer}" -lt 4 ]; then
-	  echo "ERROR: Bash version 4+ is required to run this script (bash version ${bashVer} is detected)."
-		exit 1
-fi
 
 if [ $# -lt 3 ]; then
   cat <<HELP
@@ -19,8 +18,9 @@ USAGE: $0 <filter_string> <genome_build> <config_file>
 	<genome_build> = hg19|hg38
 	<config_file> = FILER config file
 
-Example:
-    bash $0 ".\"Data Source\" == \"DASHR2\"" hg19 filer.ini 
+Examples:
+    bash $0 ".\"Data Source\" == \"DASHR2\"" hg38 filer.ini 
+    bash $0 ".\"Identifier\" == \"NGEN000601\"" hg19 filer.ini
 HELP
 	exit 1
 fi
@@ -29,6 +29,8 @@ source "${configFile}"
 metadataFile="${FILERMETADATA}"
 MLR="${MLR}"
 JQ="${JQ}"
+[ ! -x "${MLR}" ] && { echo "***ERROR: mlr not found"; exit 1; }
+[ ! -x "${JQ}" ] && { echo "***ERROR: jq not found"; exit 1; }
 
 "${MLR}" --icsv --fs tab --rs lf --ojson --jlistwrap cat "${metadataFile}" | "${JQ}" '[ .[] | select( ."Genome build" == "'"${genomeBuild}"'" and ('"${filterString}"') ) ]'
 
