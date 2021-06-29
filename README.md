@@ -9,15 +9,13 @@ FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILE
 
 This repository contains scripts that can be used to 
 
-1. deploy FILER on local server or cloud; 
+1. deploy FILER on a local server or cloud; 
 2. to prepare and preprocess data for use with FILER;
 3. to query FILER track data and metadata (see `data_querying` scripts folder).
 
 ## Deploying FILER
 
 FILER supports installation on a local server of [a full copy of all FILER tracks](#markdown-header-deploying-filer) or of [a custom subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#markdown-header-hardware-requirements) and [Software](#markdown-header-software-requirements) sections for requirements/prerequisites for a successful installation.
-
-[custom staging](#markdown-header-staging-a-custom-subset-of-the-filer-data)
 
 ### Hardware requirements
 1. Storage: Recommended disk space for **full** installation of FILER is 2500 GB for each genome build. **Partial** installation described in [Staging of a subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data) section will require less space.
@@ -27,9 +25,9 @@ FILER supports installation on a local server of [a full copy of all FILER track
 
 ### Software requirements
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
-**NOTE**: As FILER scripts are Bash-based, Mac OS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using brew (`brew install bash`, `brew install wget`), and from the repositories listed below.
+**NOTE**: As FILER scripts are Bash-based, Mac OS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using [Homebrew](https://brew.sh) (`brew install bash`, `brew install wget`, `brew install jq`, `brew install miller`), and from the repositories listed below.
 2. Bash v4.3+. NOTE: updated Bash is required.  
-3. [Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
+3. [FILER_giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
 5. [samtools](http://www.htslib.org/download)
 6. [jq](https://stedolan.github.io/jq/download/)
