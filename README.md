@@ -27,7 +27,7 @@ FILER supports installation on a local server of [a full copy of all FILER track
 1. Operating system: Linux (tested using Ubuntu 16.04, 18.04 and CentOS 7.6).
 **NOTE**: As FILER scripts are Bash-based, Mac OS-based installation are possible, but require updated Bash (v4.3+), wget, and other tools (see below), which can be installed, e.g., using [Homebrew](https://brew.sh) (`brew install bash`, `brew install wget`, `brew install jq`, `brew install miller`), and from the repositories listed below.
 2. Bash v4.3+. NOTE: updated Bash is required.  
-3. [FILER_giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
+3. [FILER Giggle](https://github.com/pkuksa/FILER_giggle). NOTE: please use the provided updated version Giggle with corrected BED indexing and search.
 4. [tabix](https://github.com/samtools/htslib)
 5. [samtools](http://www.htslib.org/download)
 6. [jq](https://stedolan.github.io/jq/download/)
