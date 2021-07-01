@@ -34,6 +34,7 @@ if [ "${bashVer}" -lt 4 ]; then
 	njobs=1
 	filterString="."
 	forceOverwrite=0
+	giggleIndexList=""
   while [[ "$#" -gt 0 ]]; do
     case $1 in
 			# required parameters
@@ -160,22 +161,25 @@ indexStats="${outputDir}/giggle_index_stats.txt"
 runSummary="${outputDir}/run_summary.txt"
 
 # generate list of giggle index directories if necessary/not provided
-if [ -n "${giggleIndexList}" ]; then
+if [ "${#giggleIndexList}" -lt 3 ]; then
 		# list giggle index directories is not provided; scan FILER directory and find all */giggle_index directories
 		echo "WARNING: list of giggle index directories was not specified. will scan ${FILERDIR} for giggle_index directories"
 		giggleIndexList="${outputDir}/giggle_index_dirs_for_search.${genomeBuild}.txt"
 		find "${FILERDIR}" -type d -iname '*giggle_index' | grep "${genomeBuild}/" > "${giggleIndexList}" 
 fi
-
+echo "List of directories that will be searched=$giggleIndexList"
 
 
 numPart=${njobs}
 searched=0
 searchedTracks=0
 found=0
-startTotalTime=$(date +%s.%N)
-# NOTE: MacOS/BSD date does not have nanoseconds N option
-startTotalTime=$( ruby -e 'puts "%.6f" % Time.now' )
+#ostype=$( echo ${OSTYPE} | awk '{print tolower($0)}' )
+startTotalTime=$( date +%s.%N )
+if [[ "${startTotalTime}" == *"N" ]]; then
+  # NOTE: MacOS/BSD date does not have nanoseconds N option
+  startTotalTime=$( ruby -e 'puts "%.6f" % Time.now' )
+fi
 
 # prepare lists of giggle indexes for searching
 
@@ -245,8 +249,12 @@ paste "${giggleOutFileList}" | \
 	done 
 
 found=$( awk 'BEGIN{FS="\t"}{t+=$2}END{print t}' "${giggleOverlapSummary}" )
-endTime=$(date +%s.%N)
-endTime=$( ruby -e 'puts "%.6f" % Time.now' )
+
+endTime=$( date +%s.%N )
+if [[ "${endTime}" =~ .*N ]]; then
+  endTime=$( ruby -e 'puts "%.6f" % Time.now' )
+fi
+
 foundOverlappingTracks=$( wc -l "${overlappingTracks}" | awk '{print $1}' )
 
 totalTime=$( echo "${endTime} - ${startTotalTime}" | bc -l )
