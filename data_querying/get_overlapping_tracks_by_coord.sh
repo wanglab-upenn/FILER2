@@ -15,13 +15,15 @@ bashVer=${BASH_VERSINFO[0]}
 scriptDir=$( dirname $0 )
 script=$( basename $0 )
 scriptSummary="return track records overlapping given interval" 
+
+# source helper functions
 source "${scriptDir}/help.sh"
 
 read -r -d '' HELPEXAMPLES << "EXAMPLES" || true
 Examples:
-bash get_overlapping_tracks_by_coord.sh --region chr1:1103243-1103243 --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini
-
-bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile gadb.ini --filterString ".\"Data Source\" == \"DASHR2\"" 
+bash get_overlapping_tracks_by_coord.sh --region chr1:1103243-1203243 --outputDir query_out --genomeBuild hg19 --configFile filer.ini --forceOverwrite 1
+bash get_overlapping_tracks_by_coord.sh --region chr1:1103243-1103243 --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile filer.ini
+bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile filer.ini --filterString ".\"Data Source\" == \"DASHR2\"" 
 EXAMPLES
 
 params=( "region;;;r;;;genomic region;;;chr1:1103243-1103332;;;''"  "outputDir;;;r;;;output directory;;;query_out;;;''" "genomeBuild;;;r;;;genome build;;;hg19|hg38;;;''" "configFile;;;r;;;FILER config file;;;filer.ini;;;''" "giggleIndexList;;;o;;;list of giggle index directories to search;;;giggle_index_list.txt;;;''" "njobs;;;o;;;number of jobs (giggle queries) to run in parallel;;;16;;;16" "filterString;;;o;;;jq track filter string;;;.\"Data Source\"==\"DASHR2\";;;." "forceOverwrite;;;o;;;set to 1 to overwrite output directory if it exists;;;0|1;;;0" )
@@ -53,7 +55,7 @@ if [ -d "${outputDir}" ] && [ "${forceOverwrite}" -ne 1  ]; then
 	echo "Set forceOverwrite=1 to overwrite"
 	exit 1
 elif [ -d "${outputDir}" ] && [ "${forceOverwrite}" -eq 1 ]; then
-	echo "Overwriting existing output directory: $outputDir"
+	echo "WARNING: Overwriting existing output directory: $outputDir"
 	rm -rf "${outputDir}"/*
 fi
 
