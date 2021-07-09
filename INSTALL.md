@@ -130,3 +130,33 @@ bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.templ
 ## Query FILER data 
 
 Data querying scripts are available in *data_querying/* of FILER code repository.
+
+### Find tracks with genomic records overlapping a given genomic region
+
+```
+bash data_querying/get_overlapping_tracks_by_coord.sh --region chr1:1103243-1203243 --outputDir query_out --genomeBuild hg19 --configFile filer.ini
+WARNING: list of giggle index directories was not specified. will scan /mnt/data/filer/FILER_test for giggle_index directories
+List of directories that will be searched=/mnt/data/filer/query_out/giggle_index_dirs_for_search.hg19.txt
+
+Searched 1,398,285 intervals (10 tracks) in 0.523184 seconds (2,672,644.805652 intervals/sec)
+
+Found 158 overlaps.
+Found 10 overlapping tracks.
+Per-track overlap counts (tsv): /mnt/data/filer/query_out/overlapping_tracks.txt
+Overlapping tracks metadata (tsv): /mnt/data/filer/query_out/overlapping_tracks.metadata.hg19.filtered.tsv
+Overlapping tracks metadata (JSON): /mnt/data/filer/query_out/overlapping_tracks.metadata.hg19.filtered.json
+Run summary: /mnt/data/filer/query_out/run_summary.txt
+```
+
+### Retrieve genomic records from a particular track overlapping a given genomic region
+
+```
+bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat json --configFile filer.ini > out.overlaps.json
+```
+
+### Retrieve track information (FILER metadata)
+
+```
+bash data_querying/get_metadata.sh ".\"Data Source\" == \"ENCODE\" and .\"cell type\" == \"CD14+ monocyte\" " hg19 filer.ini > out.metadata.json
+```
+
