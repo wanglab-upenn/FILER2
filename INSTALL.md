@@ -12,6 +12,9 @@
 7. [samtools](http://www.htslib.org/download) >=1.9
 8. Standard tools (awk, wget, git, m5sum)
 
+NOTE. For MacOS: may need to install command line tools: `xcode-select --install`
+
+
 ## Check out FILER installation scripts
 
 ```
