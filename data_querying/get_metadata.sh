@@ -9,7 +9,7 @@ configFile=${3:-"filer.ini"}
 bashVer=${BASH_VERSINFO[0]}
 
 if [ $# -lt 3 ]; then
-  cat <<HELP
+  cat <<- HELP
 Script: $(basename $0)
 Summary: retrieve track metadata for a given genome build and track filter
 
@@ -19,8 +19,9 @@ USAGE: $0 <filter_string> <genome_build> <config_file>
 	<config_file> = FILER config file
 
 Examples:
-    bash $0 ".\"Data Source\" == \"DASHR2\"" hg38 filer.ini 
-    bash $0 ".\"Identifier\" == \"NGEN000601\"" hg19 filer.ini
+bash $0 ".\"Data Source\" == \"DASHR2\"" hg38 filer.ini 
+bash $0 ".\"Identifier\" == \"NGEN000601\"" hg19 filer.ini
+bash $0 ".\"Data Source\" == \"ENCODE\" and .\"cell type\" == \"CD14+ monocyte\" " hg19 filer.ini > out.metadata.json
 HELP
 	exit 1
 fi
