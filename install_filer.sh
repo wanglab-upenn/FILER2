@@ -203,7 +203,7 @@ tail -n+2 "${meta_file}" | cut -f${fpathCol}  | sort -u > "${dirList}"
 numDir=$(wc -l "${dirList}" | awk '{print $1}')
 
 
-ulimit -Sn 65536 # this is very important for large file collections 
+ulimit -Sn 65536 || echo "WARNING: could not set limit for number of open files" # this is very important for large file collections 
 
 echo "Starting Giggle indexing..."
 echo "Using ${GIGGLE}"
