@@ -1,3 +1,4 @@
+[TOC]
 
 # Installation
 
@@ -12,13 +13,11 @@
 7. [samtools](http://www.htslib.org/download) >=1.9
 8. Standard tools (awk, wget, git, m5sum)
 
-NOTE. For MacOS: may need to install command line tools: `xcode-select --install`
-
 
 ## Check out FILER installation scripts
 
 ```
-git clone git@bitbucket.org:wanglab-upenn/filer.git FILER_scripts
+git clone https://bitbucket.org/wanglab-upenn/filer.git FILER_scripts
 ```
 
 ## Check out and install FILER Giggle
@@ -28,10 +27,12 @@ git clone https://github.com/pkuksa/FILER_giggle.git FILER_giggle
 cd FILER_giggle
 make clean
 make
+cd ..
 ```
 
 ## Download/install if necessary any missing programs/tools
 
+### Linux
 Tabix
 ```
 apt-get install tabix
@@ -58,6 +59,21 @@ https://github.com/johnkerl/miller
 https://miller.readthedocs.io/en/latest/install.html
 ```
 
+### Mac
+Command-line tools:
+`xcode-select --install`
+
+Homebrew to manage/install missing packages/software:
+`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+
+Get other necessary tools:
+`brew install openssl`
+`brew install samtools`
+`brew install wget`
+`brew install miller`
+`brew install jq`
+`brew install md5sha1sum`
+
 ## Setting up configuration file
 
 Example configuration file is provided in *data/filer.example.ini*.
@@ -73,26 +89,28 @@ The configuration files are also used to specify FILER root directory, FILER met
 # and for querying FILER data
 # for succesfull initial FILER tracks installation, please set the absolute paths for giggle
 # NOTE: giggle must be FILER_giggle version (obtained from FILER_giggle github https://github.com/pkuksa/FILER_giggle.git)
-GIGGLE=/mnt/data/bin/giggle/bin/giggle 
-TABIX=/usr/local/bin/tabix
+BINDIR=/usr/local/bin
+GIGGLE="${BINDIR}/giggle"
+TABIX="${BINDIR}/tabix"
 
 # 1.2. other binaries
 # these will be needed by the scripts for working with/querying FILER track data and metadata
-BGZIP=/usr/local/bin/bgzip
-SAMTOOLS=/mnt/data/bin/samtools-1.12/samtools
-BEDTOBIGBED=/mnt/data/bin/bedToBigBed
-JQ=/usr/bin/jq
-MLR=/mnt/data/bin/miller-5.10.0/bin/mlr
+BGZIP="{BINDIR}/bgzip"
+SAMTOOLS=${BINDIR}/samtools
+JQ="${BINDIR}/jq"
+MLR=${BINDIR}/mlr"
 
 # 2. parameters for the local FILER instance
 # FILER metadata, and FILER tracks schemas, and FILER root directory parameters will be read and used by all the data access/query scripts
 # these parameters can be specified after a full copy or a custom subset of FILER data has been set up
 BASEURL=https://lisanwanglab.org/FILER
 FILERVERSION=v1
-FILERMETADATA=/mnt/data/FILER/metadata/FILER_metadata.tsv
-FILERTRACKSCHEMAS=/mnt/data/FILER/supplementary/FILER_BED_schema.tsv
-FILERDIR=/mnt/data/FILER
+FILERDIR="/mnt/data/FILER"
+FILERMETADATA=${FILERDIR}/metadata/FILER_metadata.tsv
+FILERTRACKSCHEMAS=${FILERDIR}/metadata/FILER_BED_schema.tsv
 ```
+
+NOTE: place updated configuration file in the main FILER script folder, e.g., as *filer.ini*.
 
 ## Install FILER data
 
@@ -124,7 +142,7 @@ awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dat
 
 ```
 
-3. Use install_filer.sh to check out the desired set of tracks
+3. Use `install_filer.sh` to check out the desired set of tracks
 ```
 bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.template filer.ini
 ```
@@ -132,7 +150,8 @@ bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.templ
 
 ## Query FILER data 
 
-Data querying scripts are available in *data_querying/* of FILER code repository.
+Data querying scripts are available in the *data_querying/* directory of FILER code repository.
+To execute the commands below please `cd` into the folder with FILER scripts (e.g., `FILER_scripts`).
 
 ### Find tracks with genomic records overlapping a given genomic region
 
@@ -155,6 +174,8 @@ Run summary: /mnt/data/filer/query_out/run_summary.txt
 
 ```
 bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat json --configFile filer.ini > out.overlaps.json
+
+bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat bed --configFile filer.ini > out.overlaps.json
 ```
 
 ### Retrieve track information (FILER metadata)
