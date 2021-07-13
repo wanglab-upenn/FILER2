@@ -14,7 +14,7 @@
 8. Standard tools (awk, wget, git, m5sum)
 
 
-## Check out FILER installation scripts
+## Check out FILER installation and data scripts
 
 ```
 git clone https://bitbucket.org/wanglab-upenn/filer.git FILER_scripts
