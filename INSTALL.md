@@ -175,7 +175,7 @@ Run summary: /mnt/data/filer/query_out/run_summary.txt
 ```
 bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat json --configFile filer.ini > out.overlaps.json
 
-bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat bed --configFile filer.ini > out.overlaps.json
+bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat bed --configFile filer.ini > out.overlaps.bed
 ```
 
 ### Retrieve track information (FILER metadata)

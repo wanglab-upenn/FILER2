@@ -19,8 +19,8 @@ USAGE: $0 <filter_string> <genome_build> <config_file>
 	<config_file> = FILER config file
 
 Examples:
-bash $0 ".\"Data Source\" == \"DASHR2\"" hg38 filer.ini 
 bash $0 ".\"Identifier\" == \"NGEN000601\"" hg19 filer.ini
+bash $0 ".\"Data Source\" == \"DASHR2\"" hg38 filer.ini 
 bash $0 ".\"Data Source\" == \"ENCODE\" and .\"cell type\" == \"CD14+ monocyte\" " hg19 filer.ini > out.metadata.json
 HELP
 	exit 1
