@@ -34,7 +34,7 @@ cd ..
 
 ### Linux
 
-1. Tabix
+ 1. Tabix
 
 ```
 apt-get install tabix
@@ -46,7 +46,8 @@ git clone https://github.com/samtools/htslib
 and see instructions for installation
 ```
 
-2. Samtools
+ 2. Samtools
+
 ```
 apt-get install samtools
 ```
@@ -56,18 +57,21 @@ Or for most recent versions:
 http://www.htslib.org/download
 ```
 
-3. jq
+ 3. jq
 
 ```
 wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
 chmod a+x jq-linux64
 ```
 
-4. Miller/mlr
+ 4. Miller/mlr
+
 ```
 apt-get install miller
 ```
+
 Building from source and other installation instructions: 
+
 ```
 https://miller.readthedocs.io/en/latest/install.html
 ```
