@@ -153,7 +153,7 @@ NOTE: place updated configuration file in the main FILER script folder, e.g., as
 For these steps, please change into FILER scripts folder (`cd FILER_scripts`) to access the installation and data querying scripts (alternatively, provide absolute/relative path to the corresponding FILER script/directory, e.g., as `bash /path/to/the/script.sh`)
 Also, please make sure to have an updated FILER config with the paths/locations for all necessary binaries/executables.
 
-To install sample data and test the set up/environment:
+### To install sample data and test the set up/environment:
 
 1. Install (download and index) sample FILER data: 
 ```
@@ -169,17 +169,17 @@ NOTE: the file format/schemas file is necessary for parsing/extracting data from
 3. Update FILER configuration file with the locations of FILER installation directory, metadata, and file format/schema file from above.
 
 
-To install GRCh37/hg19 FILER data:
+### To install GRCh37/hg19 FILER data:
 ```
 bash install_filer.sh FILER_hg19 https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template filer.ini
 ```
 
-To install GRCh38/hg38 FILER data:
+### To install GRCh38/hg38 FILER data:
 ```
 bash install_filer.sh FILER_hg38 https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template filer.ini
 ```
 
-To install custom subset of the FILER data:
+### To install custom subset of the FILER data:
 
 1. Download template metafile
 ```
