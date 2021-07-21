@@ -136,10 +136,19 @@ Also, please make sure to have an updated FILER config with the paths/locations 
 
 To install sample data and test the set up/environment:
 
-
+1. Install (download and index) sample FILER data: 
 ```
 bash install_filer.sh FILER_test https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template filer.ini
 ```
+
+2. Download FILER file formats/schemas file:
+```
+wget https://tf.lisanwanglab.org/GADB/metadata/filer.schemas.latest.tsv -P FILER_test/metadata/ 
+``` 
+NOTE: the file format/schemas file is necessary for parsing/extracting data from individual tracks; see "Querying FILER data section" below.
+
+3. Update FILER configuration file with the locations of FILER installation directory, metadata, and file format/schema file from above.
+
 
 To install GRCh37/hg19 FILER data:
 ```
@@ -168,7 +177,6 @@ awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dat
 ```
 bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.template filer.ini
 ```
-
 
 ## Query FILER data 
 
