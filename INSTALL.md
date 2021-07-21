@@ -34,47 +34,52 @@ cd ..
 
 ### Linux
 
- 1. Tabix
+1. Tabix
 
-```
-apt-get install tabix
-```
+  ```
+  apt-get install tabix
+  ```
 
-Or for most recent versions:
-```
-git clone https://github.com/samtools/htslib
-and see instructions for installation
-```
+  Or for most recent versions:
+  ```
+  git clone https://github.com/samtools/htslib
+  and see instructions for installation
+  ```
 
- 2. Samtools
+2. Samtools
 
-```
-apt-get install samtools
-```
+  ```
+  apt-get install samtools
+  ```
 
-Or for most recent versions:
-```
-http://www.htslib.org/download
-```
+  Or for most recent versions:
+  ```
+  http://www.htslib.org/download
+  ```
 
- 3. jq
+3. jq
 
-```
-wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-chmod a+x jq-linux64
-```
+  ```
+  apt-get install jq
+  ```
 
- 4. Miller/mlr
+  Or download binary:
+  ```
+  wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+  chmod a+x jq-linux64
+  ```
 
-```
-apt-get install miller
-```
+4. Miller/mlr
 
-Building from source and other installation instructions: 
+  ```
+  apt-get install miller
+  ```
 
-```
-https://miller.readthedocs.io/en/latest/install.html
-```
+  Building from source and other installation instructions: 
+
+  ```
+  https://miller.readthedocs.io/en/latest/install.html
+  ```
 
 ### Mac
 Command-line tools:
