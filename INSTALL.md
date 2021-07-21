@@ -61,18 +61,35 @@ https://miller.readthedocs.io/en/latest/install.html
 
 ### Mac
 Command-line tools:
-`xcode-select --install`
+```
+xcode-select --install
+```
 
 Homebrew to manage/install missing packages/software:
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
 Get other necessary tools:
-`brew install openssl`
-`brew install samtools`
-`brew install wget`
-`brew install miller`
-`brew install jq`
-`brew install md5sha1sum`
+```
+brew install openssl
+brew install samtools
+brew install wget
+brew install miller
+brew install jq
+brew install md5sha1sum
+```
+
+Update Bash (recommended):
+```
+brew install bash
+```
+This will install updated bash in `/usr/local/bin/bash`.
+
+To change default shell to the updated version:
+```
+chsh -s /usr/local/bin/bash "$USER"
+```
 
 ## Setting up configuration file
 
@@ -115,6 +132,9 @@ NOTE: place updated configuration file in the main FILER script folder, e.g., as
 ## Install FILER data
 
 To install sample data and test the set up/environment:
+
+For the next steps, please change into FILER scripts folder (`cd FILER_scripts`) to access the installation and data querying scripts (alternatively, provide absolute/relative path to the corresponding FILER script/directory)
+
 ```
 bash install_filer.sh FILER_test https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template filer.ini
 ```
