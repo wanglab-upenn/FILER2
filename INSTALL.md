@@ -169,19 +169,19 @@ NOTE: the file format/schemas file is necessary for parsing/extracting data from
 3. Update FILER configuration file with the locations of FILER installation directory, metadata, and file format/schema file from above.
 
 
-### To install GRCh37/hg19 FILER data:
+### To install GRCh37/hg19 FILER data
 ```
 bash install_filer.sh FILER_hg19 https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template filer.ini
 ```
 
-### To install GRCh38/hg38 FILER data:
+### To install GRCh38/hg38 FILER data
 ```
 bash install_filer.sh FILER_hg38 https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template filer.ini
 ```
 
-### To install custom subset of the FILER data:
+### To install custom subset of the FILER data
 
-1. Download template metafile
+1. Download template metafile, e.g., hg38
 ```
 wget https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
 ```
