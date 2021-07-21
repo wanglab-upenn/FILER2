@@ -35,15 +35,13 @@ cd ..
 ### Linux
 Tabix
 ```
-apt-get install tabix
-```
-or compile from source
-```
 git clone https://github.com/samtools/htslib
+and see instructions for installation
 ```
 
 Samtools
 ```
+Instructions for installation:
 http://www.htslib.org/download
 ```
 
@@ -55,7 +53,10 @@ chmod a+x jq-linux64
 
 Miller/mlr
 ```
-https://github.com/johnkerl/miller
+apt-get install miller
+```
+Building from source and other installation instructions: 
+```
 https://miller.readthedocs.io/en/latest/install.html
 ```
 
@@ -178,7 +179,7 @@ awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dat
 bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.template filer.ini
 ```
 
-## Query FILER data 
+## Querying FILER data 
 
 For the next steps, please make sure to use updated FILER config file with the FILER root directory, FILER metadata, FILER schema file locations specified.
 
