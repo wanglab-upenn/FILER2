@@ -189,6 +189,10 @@ To execute the commands below please `cd` into the folder with FILER scripts (e.
 
 ```
 bash data_querying/get_overlapping_tracks_by_coord.sh --region chr1:1103243-1203243 --outputDir query_out --genomeBuild hg19 --configFile filer.ini
+```
+
+Example output:
+```
 WARNING: list of giggle index directories was not specified. will scan /mnt/data/filer/FILER_test for giggle_index directories
 List of directories that will be searched=/mnt/data/filer/query_out/giggle_index_dirs_for_search.hg19.txt
 
