@@ -33,25 +33,37 @@ cd ..
 ## Download/install if necessary any missing programs/tools
 
 ### Linux
-Tabix
+
+1. Tabix
+
+```
+apt-get install tabix
+```
+
+Or for most recent versions:
 ```
 git clone https://github.com/samtools/htslib
 and see instructions for installation
 ```
 
-Samtools
+2. Samtools
 ```
-Instructions for installation:
+apt-get install samtools
+```
+
+Or for most recent versions:
+```
 http://www.htslib.org/download
 ```
 
-jq
+3. jq
+
 ```
 wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
 chmod a+x jq-linux64
 ```
 
-Miller/mlr
+4. Miller/mlr
 ```
 apt-get install miller
 ```
