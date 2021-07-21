@@ -153,7 +153,7 @@ NOTE: place updated configuration file in the main FILER script folder, e.g., as
 For these steps, please change into FILER scripts folder (`cd FILER_scripts`) to access the installation and data querying scripts (alternatively, provide absolute/relative path to the corresponding FILER script/directory, e.g., as `bash /path/to/the/script.sh`)
 Also, please make sure to have an updated FILER config with the paths/locations for all necessary binaries/executables.
 
-### To install sample data and test the set up/environment:
+### To install sample data and test the set up/environment
 
 1. Install (download and index) sample FILER data: 
 ```
@@ -197,14 +197,14 @@ awk 'BEGIN{FS="\t"}{ if (NR==1) {print; next}; dataSource=$2; assay=$16; if (dat
 bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.template filer.ini
 ```
 
-## Querying FILER data 
+# Querying FILER data 
 
 For the next steps, please make sure to use updated FILER config file with the FILER root directory, FILER metadata, FILER schema file locations specified.
 
 Data querying scripts are available in the *data_querying/* directory of FILER scripts/code repository.
 To execute the commands below please `cd` into the folder with FILER scripts (e.g., `FILER_scripts`).
 
-### Find tracks with genomic records overlapping a given genomic region
+## Find tracks with genomic records overlapping a given genomic region
 
 ```
 bash data_querying/get_overlapping_tracks_by_coord.sh --region chr1:1103243-1203243 --outputDir query_out --genomeBuild hg19 --configFile filer.ini
@@ -225,7 +225,7 @@ Overlapping tracks metadata (JSON): /mnt/data/filer/query_out/overlapping_tracks
 Run summary: /mnt/data/filer/query_out/run_summary.txt
 ```
 
-### Retrieve genomic records from a particular track overlapping a given genomic region
+## Retrieve genomic records from a particular track overlapping a given genomic region
 
 ```
 bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat json --configFile filer.ini > out.overlaps.json
@@ -233,7 +233,7 @@ bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1
 bash data_querying/get_data_region.sh --trackID NGEN000601 --region chr1:50000-1500000 --includeMetadata 1 --outputFormat bed --configFile filer.ini > out.overlaps.bed
 ```
 
-### Retrieve track information (FILER metadata)
+## Retrieve track information (FILER metadata)
 
 ```
 bash data_querying/get_metadata.sh ".\"Data Source\" == \"ENCODE\" and .\"cell type\" == \"CD14+ monocyte\" " hg19 filer.ini > out.metadata.json
