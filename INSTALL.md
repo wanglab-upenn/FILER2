@@ -95,7 +95,7 @@ chsh -s /usr/local/bin/bash "$USER"
 
 Example configuration file is provided in *data/filer.example.ini*.
 Please set locations of the programs/tools in the config file to the locations in your system.
-The configuration files are also used to specify FILER root directory, FILER metadata file, file schema file, and other parameters.
+The configuration files are also used to specify FILER root directory, FILER metadata file, file schema file, and other parameters. NOTE: the FILER data locations can be specified after FILER data has been installed locally (see below).
 
 ``` 
 # FILER configuration file
@@ -131,9 +131,11 @@ NOTE: place updated configuration file in the main FILER script folder, e.g., as
 
 ## Install FILER data
 
+For these steps, please change into FILER scripts folder (`cd FILER_scripts`) to access the installation and data querying scripts (alternatively, provide absolute/relative path to the corresponding FILER script/directory, e.g., as `bash /path/to/the/script.sh`)
+Also, please make sure to have an updated FILER config with the paths/locations for all necessary binaries/executables.
+
 To install sample data and test the set up/environment:
 
-For the next steps, please change into FILER scripts folder (`cd FILER_scripts`) to access the installation and data querying scripts (alternatively, provide absolute/relative path to the corresponding FILER script/directory)
 
 ```
 bash install_filer.sh FILER_test https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template filer.ini
@@ -170,7 +172,9 @@ bash install_filer.sh FILER_ENCODE_ChIP_seq_hg38 filer.encode_chipseq.hg38.templ
 
 ## Query FILER data 
 
-Data querying scripts are available in the *data_querying/* directory of FILER code repository.
+For the next steps, please make sure to use updated FILER config file with the FILER root directory, FILER metadata, FILER schema file locations specified.
+
+Data querying scripts are available in the *data_querying/* directory of FILER scripts/code repository.
 To execute the commands below please `cd` into the folder with FILER scripts (e.g., `FILER_scripts`).
 
 ### Find tracks with genomic records overlapping a given genomic region
