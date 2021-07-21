@@ -70,13 +70,10 @@ cd ..
   ```
 
 4. Miller/mlr
-
   ```
   apt-get install miller
   ```
-
   Building from source and other installation instructions: 
-
   ```
   https://miller.readthedocs.io/en/latest/install.html
   ```
