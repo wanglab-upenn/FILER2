@@ -4,9 +4,9 @@ FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILE
 
 This repository contains scripts that can be used to 
 
-1. deploy FILER on a local server or cloud; 
-2. to prepare and preprocess data for use with FILER;
-3. to query FILER track data and metadata (see `data_querying` scripts folder).
+1\. deploy FILER on a local server or cloud; 
+2\. to prepare and preprocess data for use with FILER;
+3\. to query FILER track data and metadata (see `data_querying` scripts folder).
 
 
 [TOC]
