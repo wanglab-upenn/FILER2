@@ -2,16 +2,14 @@
 
 FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILER)
 
-[TOC]
-
-
-# About
-
 This repository contains scripts that can be used to 
 
 1. deploy FILER on a local server or cloud; 
 2. to prepare and preprocess data for use with FILER;
 3. to query FILER track data and metadata (see `data_querying` scripts folder).
+
+
+[TOC]
 
 # Deploying FILER
 
@@ -277,7 +275,7 @@ The `install_filer.sh` script will
 2. index FILER data collections using `giggle`
 3. index individual data tracks using `tabix`
 
-### Basic usage:
+### Basic usage
 
 ```
 bash install_filer.sh <target_FILER_dir> <FILER_metadata_url|FILER_metadata_file> <FILER_config_file>
