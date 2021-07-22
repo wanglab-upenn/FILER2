@@ -408,22 +408,22 @@ bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggle
 bash get_overlapping_tracks_by_coord.sh --region "chr1:1103243-1103243" --giggleIndexList giggle_index_list.hg19.all.txt --outputDir query_out --genomeBuild hg19 --configFile filer.ini --filterString ".\"Data Source\" == \"DASHR2\"" --forceOverwrite 1
 ```
 
-## Frequently Asked Questions (FAQ)
+# Frequently Asked Questions (FAQ)
 
-### **Q1**. How can I download individual FILER tracks?
+## **Q1**. How can I download individual FILER tracks?
 
 **A1**. Individual tracks can be downloaded in several ways:
 
 1. Using the FILER website: from [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) using provided *Download* links in the *Download file* column of the FILER track table.
 2. Using download link provided in the FILER metadata table (see *Processed File Download URL* column, e.g., in [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) or [GRCh38/hg38](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER metadata tables)
 
-### **Q2**. Running FILER script fails with an error message:
+## **Q2**. Running FILER script fails with an error message:
 e.g., `declare: -A: invalid option` or `ERROR: Bash version 4+ is required`
 
 **A2**. FILER scripts require Bash v4.3+. Please check `bash --version` and update if necessary (e.g., using `brew install bash` on Mac OS, `yum update bash` on Cent OS, `apt-get install --only-upgrade bash` for Ubuntu)
 
 
-### **Q3**. How can I download a particular/custom subset of FILER tracks?
+## **Q3**. How can I download a particular/custom subset of FILER tracks?
 
 1. Using the website: Use data selectors/filters on the [Browse page](https://tf.lisanwanglab.org/FILER/browse.php) to filter tracks down to a desired set.
 Then click on *Download* button above the FILER track table to download FILER track metadata for the selected tracks. Column *Processed File Download URL* will contain download URLs for individual tracks, while column *wget command* will contain wget download commands. Importantly, these wget commands will reproduce FILER directory structures/data collections. Alternatively, each track can be downloaded using *Download* link under *Download file* column.
@@ -431,7 +431,7 @@ Then click on *Download* button above the FILER track table to download FILER tr
 
 2. Using the command-line: Use `bash install_filer.sh <filer_metadata_template_file>`. Template metadata files are available for all [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg38](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template metadata files can be filtered to obtain a desired/specific subset of FILER tracks before running `bash install_filer.sh` (see also the section on [installing a custom subset of FILER tracks](#markdown-header-staging-a-custom-subset-of-the-filer-data) for examples). 
 
-## Citation
+# Citation
 If you use FILER functional genomics database in your research, please cite:
 
 P. P. Kuksa, P. Gangadharan, Z. Katanic, L. Kleidermacher, A. Amlie-Wolf, C.-Y. Lee, E. Greenfest-Allen, O. Valladares, Y. Y. Leung, L.-S. Wang. FILER: Integrated, large-scale Functional genomics repository. 2020 [https://doi.org/10.1101/2021.01.22.427681](https://doi.org/10.1101/2021.01.22.427681)
