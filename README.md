@@ -13,7 +13,7 @@ This repository contains scripts that can be used to
 
 # Deploying FILER
 
-FILER supports installation on a local server of [a full copy of all FILER tracks](#markdown-header-deploying-filer) or of [a custom subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#markdown-header-hardware-requirements) and [Software](#markdown-header-software-requirements) sections for requirements/prerequisites for a successful installation.
+FILER supports installation on a local server of [a full copy of all FILER tracks](#markdown-header-install-filer-data) or of [a custom subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#markdown-header-hardware-requirements) and [Software](#markdown-header-prerequisites) sections for requirements/prerequisites for a successful installation.
 
 
 ## Hardware requirements
