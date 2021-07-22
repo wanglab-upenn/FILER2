@@ -1,14 +1,14 @@
-[FILER: Functional genomics repository](https://lisanwanglab.org/FILER)
+FILER: Functional genomics repository
 
 FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILER)
 
 This repository contains scripts that can be used to 
 
-1\. deploy FILER on a local server or cloud; 
+1\. deploy FILER on a local server or cloud (see `install_filer.sh`); 
 
-2\. to prepare and preprocess data for use with FILER;
+2\. to prepare and preprocess data for use with FILER (see `data_processing` scripts subfolder);
 
-3\. to query FILER track data and metadata (see `data_querying` scripts folder).
+3\. to query FILER track data and metadata (see `data_querying` scripts subfolder).
 
 
 [TOC]
@@ -148,7 +148,7 @@ This configuration file is required to run FILER installation and command line s
 # 1. necessary executables
 # 1.1 giggle, tabix are required for FILER tracks installation (install_filer.sh)
 # and for querying FILER data
-# for succesfull initial FILER tracks installation, please set the absolute paths for giggle
+# for successful initial FILER tracks installation, please set the absolute paths for giggle
 # NOTE: giggle must be FILER_giggle version (obtained from FILER_giggle github https://github.com/pkuksa/FILER_giggle.git)
 BINDIR=/usr/local/bin
 GIGGLE="${BINDIR}/giggle"
@@ -206,7 +206,7 @@ bash install_filer.sh FILER_hg19 https://tf.lisanwanglab.org/GADB/metadata/filer
 wget https://tf.lisanwanglab.org/GADB/metadata/filer.schemas.latest.tsv -P FILER_hg19/metadata/ 
 ```
 
-3. Update FILER config file with the locations of FILER installation directory, metadata file and file formats/schemas files (FILERDIR, FILERMETADATA, FILERTRACKSSCHEMAS variables).
+3. Update FILER config file with the locations of FILER installation directory, metadata file and file formats/schemas files (FILERDIR, FILERMETADATA, FILERTRACKSCHEMAS variables).
   
 ### To install GRCh38/hg38 FILER data
 
