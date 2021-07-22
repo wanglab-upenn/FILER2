@@ -1,4 +1,4 @@
-FILER: Functional genomics repository
+**FILER: Functional genomics repository**
 
 FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILER)
 
