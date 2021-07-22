@@ -193,18 +193,36 @@ NOTE: the file format/schemas file is necessary for parsing/extracting data from
 
 
 ### To install GRCh37/hg19 FILER data
+
+1. Install (download and index) CRCh37/hg19 FILER data:
 ```
 bash install_filer.sh FILER_hg19 https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template filer.ini
 ```
 
+2. Download FILER file formats/schemas file and place it inside FILER/metadata directory:
+```
+wget https://tf.lisanwanglab.org/GADB/metadata/filer.schemas.latest.tsv -P FILER_hg19/metadata/ 
+```
+
+3. Update FILER config file with the locations of FILER installation directory, metadata file and file formats/schemas files (FILERDIR, FILERMETADATA, FILERTRACKSSCHEMAS variables).
+  
 ### To install GRCh38/hg38 FILER data
+
+1. Install (download and index) GRCh38/hg38 FILER data:
 ```
 bash install_filer.sh FILER_hg38 https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template filer.ini
 ```
 
+2. Download FILER file formats/schemas file and place it inside FILER/metadata directory
+```
+wget https://tf.lisanwanglab.org/GADB/metadata/filer.schemas.latest.tsv -P FILER_hg38/metadata/ 
+```
+
+3. Update FILER config file with the locations of FILER installation directory, metadata file and file formats/schemas files (FILERDIR, FILERMETADATA, FILERTRACKSSCHEMAS variables).
+
 ### To install custom subset of the FILER data
 
-1. Download template metafile, e.g., hg38
+1. Download template metafile, e.g., for hg38
 ```
 wget https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
 ```
