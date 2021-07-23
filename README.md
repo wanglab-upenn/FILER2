@@ -448,6 +448,10 @@ Then click on *Download* button above the FILER track table to download FILER tr
 
 2. Using the command-line: Use `bash install_filer.sh <filer_metadata_template_file>`. Template metadata files are available for all [GRCh37/hg19](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template) and [GRCh38/hg38](https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template) FILER tracks. These template metadata files can be filtered to obtain a desired/specific subset of FILER tracks before running `bash install_filer.sh` (see also the section on [installing a custom subset of FILER tracks](#markdown-header-staging-a-custom-subset-of-the-filer-data) for examples). 
 
+# Contact
+
+[filer@lisanwanglab.org](mailto:filer@lisanwanglab.org)
+
 # Citation
 If you use FILER functional genomics database in your research, please cite:
 
