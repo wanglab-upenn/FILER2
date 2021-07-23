@@ -1,81 +1,36 @@
+bashVer="${BASH_VERSINFO[0]}"
+scriptDir=$( dirname "$0" )
+script=$( basename "$0" )
+scriptSummary="return track/genomic records overlapping given BED intervals" 
 
-function Help()
-{
-	echo "Script: $script"
-	echo "Summary: get overlaps with FILER tracks for a given BED file" 
-	echo ""
-	echo -n "USAGE: $script"
-	for p in "${!params[@]}"; do
-		echo -n " --$p <$p>"
-	done
-	echo "";
+# source helper functions
+source "${scriptDir}/help.sh"
 
-	for p in "${!params[@]}"; do
-		v="${params[$p]}"
-		IFS=$'\t' read -r req descr exampleVal defVal clVal < <(echo "${v}" | sed 's/;;;/\t/g') 
-		reqDisp="Required" && [ "${req}" = "o" ] && reqDisp="Optional"
-		echo -e "[$reqDisp] <$p> = ${descr}. Example: ${exampleVal}. Default: $defVal"
-	done #| sort -k1,1r -s
-  echo ""
+# script parameters
+# parameterName;;;requred;;;description;;;example value;;;default value
+params=( "inBed;;;r;;;input BED file (NOTE: must be in sorted bgzip bed.gz format);;;input.bed.gz;;;''" "giggleIndexDirList;;;o;;;file with the list of giggle-indexed directories to search. NOTE: one giggle index directory (absolute path) per-line;;;giggle_index_dirs.txt;;;''" "configFile;;;r;;;FILER configuration file;;;filer.ini;;;''" "outputDir;;;r;;;output directory;;;filer_out;;;''" "forceOverwrite;;;o;;;set to 1 to overwrite output folder if it already exists;;;0 or 1;;;0" "genomeBuild;;;o;;;genome build. NOTE: must be provided if list of giggle index directories for search is not provided;;;hg19 or hg38;;;''" "verboseSearch;;;o;;;enable verbose search (slower; will report overlapping records (hit strings));;;0 or 1;;;0" )
 
-  cat <<NOTES
-
-NOTE: input BED must be coordinate-sorted and bgzipped. E.g., to prepare a BED file for overlap the following command can be used:
-LC_ALL=C sort -k1,1 -k2,2n -k3,3n input.bed | bgzip -c > input.sorted.bed.gz
-
-NOTES
-
-	cat <<EXAMPLES
-
+read -r -d '' HELPEXAMPLES << "EXAMPLES" || true
 Examples:
 
 bash filer_overlap.sh --configFile gadb.ini --giggleIndexDirList giggle_index_list.hg19.test.txt --inBed test.hg19.bed.gz --outputDir test_filer_out
-
 EXAMPLES
 
-	exit 1
-}
+read -r -d '' HELPNOTES << "NOTES" || true
+NOTE: input BED must be coordinate-sorted and bgzipped. E.g., to prepare a BED file for overlap the following command can be used:
+LC_ALL=C sort -k1,1 -k2,2n -k3,3n input.bed | bgzip -c > input.sorted.bed.gz
+NOTES
 
-# script parameters
-# requred;;;description;;;example value;;;default value
-declare -A params=( [inBed]="r;;;input BED file (NOTE: must be in sorted bgzip bed.gz format);;;input.bed.gz;;;''" [giggleIndexDirList]="o;;;file with the list of giggle-indexed directories to search. NOTE: one giggle index directory (absolute path) per-line;;;giggle_index_dirs.txt;;;''" [configFile]="r;;;FILER configuration file;;;filer.ini;;;''" [outputDir]="r;;;output directory;;;filer_out;;;''" [forceOverwrite]="o;;;set to 1 to overwrite output folder if it already exists;;;0 or 1;;;0" [genomeBuild]="o;;;genome build. NOTE: must be provided if list of giggle index directories for search is not provided;;;hg19 or hg38;;;''" )
-
-doOutputMatrix=0
-
-script=$(basename $0)
-
-[ $# -lt 3 ] && echo "ERROR: not enough input arguments provided" && Help 
-
-# read command line arguments: assumed to be in '--param value' format
-while [ $# -gt 0 ]; do
-	if [[ $1 == "--help" ]]; then
-		Help
-	fi
-  if [[ $1 == "--"* ]]; then
-    param="${1#--}"
-		value="${2}"
-		if [ ${params[$param]+_} ]; then
-		  params[$param]="${params[$param]};;;${value}" # add provided command-line value to the parameter array
-		else
-			echo "***ERROR: Unknown option $param is specified."
-			exit 1
-		fi
-  fi
-  shift 2
+[ $# -lt 6 ] && Help "***ERROR: not enough input arguments provided. Please see usage" && exit 1
+# parse command-line arguments and set all parameters
+paramValues=()
+SetParams "$@"
+echo "Parameter values:"
+for pv in "${paramValues[@]}"; do
+  p="${pv%%;;;*}"
+	v="${pv##*;;;}"
+	echo "$p=$v"
 done
-
-for p in "${!params[@]}"; do
-	v=${params[$p]}
-	IFS=$'\t' read -r isReq descr exampleVal defVal clVal < <(echo "${v}" | sed 's/;;;/\t/g')
-	if [ "${isReq}" = "r" ] && [ "${clVal}" = "" ]; then
-		echo "***ERROR: required parameter $p is not specified"
-		exit 1
-	fi
-	value=${clVal:-"${defVal}"}
-	declare $p="$value" # initialize all parameters with the provided values or defaults
-done
-
-# parse command line arguments
 
 source "${configFile}"
 FILERMETA="${FILERMETADATA}"
@@ -131,7 +86,26 @@ cat "${giggleIndexDirList}" | \
 		## giggle search
 		#  -o=report results per input record omitting non-overlapping records (this only using giggle index; not accessing actual track files; so it's faster)
 		#  -b=report in BED format
-		"${GIGGLE}" search -q "${inBed}" -i "${gi}" -o -b > "${outfile}"
+		if [ "${verboseSearch}" = "1" ]; then
+			"${GIGGLE}" search -q "${inBed}" -i "${gi}" -o -v | \
+				LC_ALL=C awk 'BEGIN{FS="\t";OFS="\t"}
+				 {
+				 if ($1~/^##/) # query line
+				 {
+					query=$0;
+					query=substr(query,3); # remove leading ##
+				 }
+				 else
+				 {
+					overlap=$0;
+					fname=$NF;
+					gsub(/\t/,"@@@",overlap); # hit string
+					print query, fname, overlap, "1";
+				 }
+			 }' > "${outfile}"
+	  else	
+		 "${GIGGLE}" search -q "${inBed}" -i "${gi}" -o -b > "${outfile}"
+		fi
 	done
 
 ## collect overlap/sig results, sort by significance (giggle combo score)
@@ -143,7 +117,13 @@ defaultHeader=$( seq -f 'inputField%g' -s $'\t' ${numInputFields} )
 firstLine=$( zcat "${inBed}" | head -n 1 )
 # set header to default or, if present, to the header provided in bed file itself
 inBedHeader="${defaultHeader}" && [[ "${firstLine}" == "#"*  ]] && inBedHeader="${firstLine#\#}"
-giggleHeader="trackFile\ttrackNumIntervals\tnumOverlaps"
+
+if [ "${verboseSearch}" = "1" ]; then
+  giggleHeader="trackFile\thitstring\tnumOverlaps"
+else
+  giggleHeader="trackFile\ttrackNumIntervals\tnumOverlaps"
+fi
+
 echo -e "#${inBedHeader}\t${giggleHeader}" > "${giggleOverlaps}"
 
 # collect overlaps acrosss all data sources/giggle indexes
