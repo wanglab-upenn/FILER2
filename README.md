@@ -191,7 +191,7 @@ wget https://tf.lisanwanglab.org/GADB/metadata/filer.schemas.latest.tsv -P FILER
 ``` 
 NOTE: the file format/schemas file is necessary for parsing/extracting data from individual tracks; see "Querying FILER data section" below.
 
-3. Update FILER configuration file with the locations of FILER installation directory, metadata, and file format/schema file from above.
+3. Update FILER configuration file with the locations of FILER installation directory (FILERDIR), metadata (FILERMETADATA), and file format/schema file (FILERTRACKSCHEMAS) from above (i.e. `FILER_test`, `FILER_test/metadata/test_metadata.hg19.tsv`, and `FILER_test/metadata/filer.schemas.latests.tsv`).
 
 
 ### To install GRCh37/hg19 FILER data
