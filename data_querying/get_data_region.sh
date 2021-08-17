@@ -66,7 +66,7 @@ if [ "${outputFormat}" = "json" ]; then
 		echo "\"features\" : ["
 		#(echo "$trackSchema" && "${TABIX}" "${TRACK}" "${region}") | "${MLR}" --icsv --fs tab --rs lf --ojsonx --jlistwrap cat
 		#(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region}) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | sed -z 's/}\n{/},\n{/g'
-		( echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region} ) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | awk 'BEGIN{RS=""}{ gsub(/}\n{/, "},\n{", $0); print}'
+		( echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region} ) | "${MLR}" --icsv --fs tab --rs lf --ojson --jvstack cat | awk 'BEGIN{RS=""}{ gsub(/}\n{/, "},\n{", $0); print}'
 		echo "]"
 		echo "}"
 		#echo "]"
@@ -74,7 +74,7 @@ if [ "${outputFormat}" = "json" ]; then
 		# output only features array
 		echo "["
 		#(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region}) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | sed -z 's/}\n{/},\n{/g'
-		(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region}) | "${MLR}" --icsv --fs tab --rs lf --ojsonx cat | awk 'BEGIN{RS=""}{ gsub(/}\n{/, "},\n{", $0); print}'
+		(echo "$trackSchema" && "${TABIX}" "${TRACK}" ${region}) | "${MLR}" --icsv --fs tab --rs lf --ojson --jvstack cat | awk 'BEGIN{RS=""}{ gsub(/}\n{/, "},\n{", $0); print}'
 		echo "]"
 	fi
 
