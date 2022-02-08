@@ -36,6 +36,7 @@ source "${configFile}"
 FILERMETA="${FILERMETADATA}"
 FILERROOTDIR="${FILERDIR}"
 GIGGLE="${GIGGLE}"
+TEMPDIR="${TEMPDIR:-/tmp}" ## can set TEMPDIR in the config, e.g., if /tmp is too small
 
 if [ ! -x "${GIGGLE}" ]; then
 	echo "ERROR: FILER Giggle not found. Please install and provide absolute path for FILER Giggle"
@@ -53,8 +54,16 @@ if [ -d "${outputDir}" ]; then
  fi
 fi
 mkdir -p "${outputDir}"
-giggleOverlaps="$outputDir/giggle_overlaps.tsv"
-giggleOverlapsWithMeta="${giggleOverlaps%.*}.with_meta.tsv"
+giggleOverlaps="$outputDir/filer_overlaps.bed"
+giggleOverlapsWithMeta="${giggleOverlaps%.*}.with_meta.bed"
+
+# prepare bed.gz for use with giggle
+inBedGz="${outputDir}/input.bed.gz"
+if [ "${inBed##*.}" = "gz" ]; then
+  zcat "${inBed}" | LC_ALL=C sort -k1,1 -k2,2n -k3,3n | "${BGZIP}" -c > "${inBedGz}"
+else
+  LC_ALL=C sort -k1,1 -k2,2n -k3,3n "${inBed}" | "${BGZIP}" -c > "${inBedGz}"
+fi
 
 # generate list of giggle index directories if necessary/not provided
 if [ "${#giggleIndexDirList}" -lt 3 ]; then
@@ -70,8 +79,27 @@ if [ "${#giggleIndexDirList}" -lt 3 ]; then
 fi
 echo "List of directories that will be searched=$giggleIndexDirList"
 
+jobSize=4 # number of giggle query jobs to run in parallel
+numSearchDirs=$( wc -l "${giggleIndexDirList}" | awk '{print $1}' )
+chunkSize=${jobSize} #$(( (numSearchDirs-1) / jobSize + 1 )) # round up
+partPrefix="$outputDir/$(basename "${giggleIndexDirList}")"
+partsList="${outputDir}/giggle_index_dirs.parts_list.txt"
+awk 'BEGIN{chunkSize="'${chunkSize}'"+0; prefix="'"${partPrefix}"'"; partFileList="'"${partsList}"'";}
+{
+	partCnt = int( FNR / chunkSize );
+	partSuffix=sprintf("part%02d", partCnt);
+	partFile=( prefix "." partSuffix);
+	if (partFiles[partFile]!=1) partFiles[partFile]=1;
+	print $0 > partFile;
+}
+END{
+  for (pf in partFiles)
+		print pf > partFileList;
+}' "${giggleIndexDirList}"
+
 ## search FILER, one data collection/giggle index at a time
-cat "${giggleIndexDirList}" | \
+#cat "${giggleIndexDirList}" | \
+while read -r sublist; do
   while read -r gi; do
 		# gi contains full/absolute path to giggle_index folder
 		indexdir="${gi}"
@@ -87,7 +115,7 @@ cat "${giggleIndexDirList}" | \
 		#  -o=report results per input record omitting non-overlapping records (this only using giggle index; not accessing actual track files; so it's faster)
 		#  -b=report in BED format
 		if [ "${verboseSearch}" = "1" ]; then
-			"${GIGGLE}" search -q "${inBed}" -i "${gi}" -o -v | \
+			( "${GIGGLE}" search -q "${inBedGz}" -i "${gi}" -o -v | \
 				LC_ALL=C awk 'BEGIN{FS="\t";OFS="\t"}
 				 {
 				 if ($1~/^##/) # query line
@@ -102,24 +130,26 @@ cat "${giggleIndexDirList}" | \
 					gsub(/\t/,"@@@",overlap); # hit string
 					print query, fname, overlap, "1";
 				 }
-			 }' > "${outfile}"
+			 }' > "${outfile}" ) &
 	  else	
-		 "${GIGGLE}" search -q "${inBed}" -i "${gi}" -o -b > "${outfile}"
+		 "${GIGGLE}" search -q "${inBedGz}" -i "${gi}" -o -b > "${outfile}" &
 		fi
-	done
+	done < "${sublist}"
+	wait
+done < "${partsList}"
 
 ## collect overlap/sig results, sort by significance (giggle combo score)
 >"${giggleOverlaps}"
-numInputFields=$( zcat "${inBed}" | head -n 1 | awk -F $'\t' '{print NF}' )
+numInputFields=$( zcat "${inBedGz}" | head -n 1 | awk -F $'\t' '{print NF}' )
 
 # construct header: input BED header (from bed itself or default) + giggle overlap header
 defaultHeader=$( seq -f 'inputField%g' -s $'\t' ${numInputFields} )
-firstLine=$( zcat "${inBed}" | head -n 1 )
+firstLine=$( zcat "${inBedGz}" | head -n 1 )
 # set header to default or, if present, to the header provided in bed file itself
 inBedHeader="${defaultHeader}" && [[ "${firstLine}" == "#"*  ]] && inBedHeader="${firstLine#\#}"
 
 if [ "${verboseSearch}" = "1" ]; then
-  giggleHeader="trackFile\thitstring\tnumOverlaps"
+  giggleHeader="trackFile\thitString\tnumOverlaps"
 else
   giggleHeader="trackFile\ttrackNumIntervals\tnumOverlaps"
 fi
@@ -131,12 +161,33 @@ find "${outputDir}" -type f -iname 'giggle_out.txt' | \
 	while read -r f; do
 		#tail -n+2 "${f}";
 		cat "${f}"
-	done | LC_ALL=C sort -k1,1 -k2,2n -k3,3n >> "${giggleOverlaps}" 
+	done | LC_ALL=C sort -k1,1 -k2,2n -k3,3n -T "${TEMPDIR}" >> "${giggleOverlaps}" 
 
 ## join overlaps with FILER track metadata
 awk 'BEGIN{FS="\t";OFS="\t"; fileCol='${numInputFields}'+1;}
 { if (FILENAME==ARGV[1]) { if (FNR==1) {metaHeader=$0; next}; fdir=$19; fname=$3; fpath=(fdir "/" fname); meta[fpath]=$0; }
   else if (FILENAME==ARGV[2]) { if (FNR==1) { giggleHeader=$0; print giggleHeader, metaHeader; next }; f=$fileCol; md=meta[f]; if (md=="") {printf "ERROR: no metadata found for %s\n", f; exit;}; print $0, md} }' "${FILERMETA}" "${giggleOverlaps}" > "${giggleOverlapsWithMeta}"
+
+## split overlap results by genomic feature type (classification column)
+overlapsByFeatureTypeDIR="${outputDir}/overlaps_by_feature_type"
+mkdir -p "${overlapsByFeatureTypeDIR}"
+outPrefix="${overlapsByFeatureTypeDIR}/filer_overlaps"
+LC_ALL=C awk 'BEGIN{ FS="\t"; OFS="\t"; outPrefix="'"${outPrefix}"'"; }
+ {
+	 if (FNR==1) 
+	 {
+		 header=$0; # save header; will be printed for each of feature types
+		 next;
+	 }
+	 featureType=$(NF-2);
+	 outfile=(outPrefix "." featureType ".bed");
+	 if (features[featureType]!=1)
+	 {
+		 print header > outfile; # print header for the feature file
+		 features[featureType]=1;
+	 }
+	 print > outfile;
+ }' "${giggleOverlapsWithMeta}"
 
 echo "Overlaps (with meta): ${giggleOverlapsWithMeta}"
 echo "Overlaps (no meta): ${giggleOverlaps}"
