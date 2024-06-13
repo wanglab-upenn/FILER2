@@ -169,7 +169,12 @@ echo "Starting dowloading ..."
 		 fi
 
 		 # download file; use time-stamping
-		 wget -N "${url}" -P "${tgDir}"
+		 #wget -N "${url}" -P "${tgDir}"
+		 mkdir -p "${tgDir}"
+		 tgFname="${url##*/}"
+		 tgFname="${fname}"
+		 echo -e "WGET COMMAND:\nwget -N '${url}' -o "${tgDir}/${tgFname}""
+		 wget -N "${url}" -O "${tgDir}/${tgFname}"
 
 		 # check file size match
 		 #existingFileSize=$( stat "${downloadedFile}" --print "%s\n" )
