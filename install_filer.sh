@@ -174,6 +174,7 @@ echo "Starting dowloading ..."
 		 tgFname="${url##*/}"
 		 tgFname="${fname}"
 		 echo -e "WGET COMMAND:\nwget -N '${url}' -o "${tgDir}/${tgFname}""
+		 url="${url/\?/%3f}"
 		 wget -N "${url}" -O "${tgDir}/${tgFname}"
 
 		 # check file size match
