@@ -109,7 +109,8 @@ else
 fi
 
 # template and final meta files
-meta_file_template="$TARGETDIR/metadata/${ANNOT_URL##*/}"
+#meta_file_template="$TARGETDIR/metadata/${ANNOT_URL##*/}"
+meta_file_template="$ANNOTDIR/metadata/${ANNOT_URL##*/}"
 meta_file="${meta_file_template%.template}.tsv"
 
 
@@ -248,3 +249,5 @@ tail -n+2 "${meta_file}" | \
 		xargs -L 1 "${TABIX}" -f -p
 
 echo "Log file=${logFile}"
+echo "FILER root directory=${ANNOTDIR}"
+echo "FILER metadata file=${meta_file}"
