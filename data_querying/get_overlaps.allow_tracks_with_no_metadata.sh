@@ -8,7 +8,7 @@ source "${scriptDir}/help.sh"
 
 # script parameters
 # parameterName;;;requred;;;description;;;example value;;;default value
-params=( "inBed;;;r;;;input BED file (NOTE: must be in sorted bgzip bed.gz format);;;input.bed.gz;;;''" "giggleIndexDirList;;;o;;;file with the list of giggle-indexed directories to search. NOTE: one giggle index directory (absolute path) per-line;;;giggle_index_dirs.txt;;;''" "configFile;;;r;;;FILER configuration file;;;filer.ini;;;''" "outputDir;;;r;;;output directory;;;filer_out;;;''" "forceOverwrite;;;o;;;set to 1 to overwrite output folder if it already exists;;;0 or 1;;;0" "genomeBuild;;;o;;;genome build. NOTE: must be provided if list of giggle index directories for search is not provided;;;hg19 or hg38;;;''" "verboseSearch;;;o;;;enable verbose search (slower; will report overlapping records (hit strings));;;0 or 1;;;0" "tempDir;;;o;;;temporary directory;;;e.g., /tmp or outputDir/tmp;;;/tmp" )
+params=( "inBed;;;r;;;input BED file (NOTE: must be in sorted bgzip bed.gz format);;;input.bed.gz;;;''" "giggleIndexDirList;;;o;;;file with the list of giggle-indexed directories to search. NOTE: one giggle index directory (absolute path) per-line;;;giggle_index_dirs.txt;;;''" "configFile;;;r;;;FILER configuration file;;;filer.ini;;;''" "outputDir;;;r;;;output directory;;;filer_out;;;''" "forceOverwrite;;;o;;;set to 1 to overwrite output folder if it already exists;;;0 or 1;;;0" "genomeBuild;;;o;;;genome build. NOTE: must be provided if list of giggle index directories for search is not provided;;;hg19 or hg38;;;''" "verboseSearch;;;o;;;enable verbose search (slower; will report overlapping records (hit strings));;;0 or 1;;;0" "tempDir;;;o;;;temporary directory;;;e.g., /tmp or outputDir/tmp;;;/tmp" "stopIfNoMetadata;;;o;;;set to 1 if need to stop when overlapping track is not found in metadata (this will catch any errors associated with the setup/metadata/files mismatches);;;1" )
 
 read -r -d '' HELPEXAMPLES << "EXAMPLES" || true
 Examples:
@@ -170,9 +170,17 @@ find "${outputDir}" -type f -iname 'giggle_out.txt' | \
 #{ if (FILENAME==ARGV[1]) { if (FNR==1) {metaHeader=$0; next}; fdir=$19; fname=$3; gsub(/[\/]+/,"/",fdir); gsub(/\/$/,"", fdir); fpath=(fdir "/" fname); meta[fpath]=$0; }
 #else if (FILENAME==ARGV[2]) { if (FNR==1) { giggleHeader=$0; print giggleHeader, metaHeader; next }; f=$fileCol; gsub(/[\/]+/,"/",f); md=meta[f]; if (md=="") {printf "ERROR: no metadata found for %s\n", f; exit;}; print $0, md} }' "${FILERMETA}" "${giggleOverlaps}" > "${giggleOverlapsWithMeta}"
 
+if [ "${stopIfNoMetadata}" = 1 ]; then
+## NOTE: this will stop if no metadata is found for one of the tracks
+awk 'BEGIN{FS="\t";OFS="\t"; fileCol='${numInputFields}'+1; err=0;}
+{ if (FILENAME==ARGV[1]) { if (FNR==1) {metaHeader=$0; next}; fdir=$19; fname=$3; gsub(/[\/]+/,"/",fdir); gsub(/\/$/,"", fdir); gsub(/^\/[^\/]+\/[^\/]+\//,"", fdir); fpath=(fdir "/" fname); meta[fpath]=$0; }
+else if (FILENAME==ARGV[2]) { if (FNR==1) { giggleHeader=$0; print giggleHeader, metaHeader; next }; f=$fileCol; gsub(/[\/]+/,"/",f); gsub(/^\/[^\/]+\/[^\/]+\//,"", f); md=meta[f]; if (md=="") {printf "ERROR: no metadata found for %s\n", f; printf "ERROR: no metadata found for %s\n", f > "/dev/stderr"; err=2; exit;}; print $0, md} }END{ exit err; }' "${FILERMETA}" "${giggleOverlaps}" > "${giggleOverlapsWithMeta}"
+else
+## NOTE: this will not stop and will just skip lines with tracks not found in metadata
 awk 'BEGIN{FS="\t";OFS="\t"; fileCol='${numInputFields}'+1; err=0;}
 { if (FILENAME==ARGV[1]) { if (FNR==1) {metaHeader=$0; next}; fdir=$19; fname=$3; gsub(/[\/]+/,"/",fdir); gsub(/\/$/,"", fdir); fpath=(fdir "/" fname); meta[fpath]=$0; }
-else if (FILENAME==ARGV[2]) { if (FNR==1) { giggleHeader=$0; print giggleHeader, metaHeader; next }; f=$fileCol; gsub(/[\/]+/,"/",f); md=meta[f]; if (md=="") {printf "ERROR: no metadata found for %s\n", f; printf "ERROR: no metadata found for %s\n", f > "/dev/stderr"; err=2; exit;}; print $0, md} }END{ exit err; }' "${FILERMETA}" "${giggleOverlaps}" > "${giggleOverlapsWithMeta}"
+else if (FILENAME==ARGV[2]) { if (FNR==1) { giggleHeader=$0; print giggleHeader, metaHeader; next }; f=$fileCol; gsub(/[\/]+/,"/",f); md=meta[f]; if (md=="") { printf "ERROR: no metadata found for %s\n", f > "/dev/null"; err=2; } else { print $0, md} } }' "${FILERMETA}" "${giggleOverlaps}" > "${giggleOverlapsWithMeta}"
+fi
 
 ## split overlap results by genomic feature type (classification column in the FILER metadata)
 overlapsByFeatureTypeDIR="${outputDir}/overlaps_by_feature_type"

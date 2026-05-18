@@ -1,0 +1,1 @@
+ cut -f 1,25 ../metadata/GADB_metadata_V1_final_4142021.with_data_classification_v4.with_fixed_data_source_names.tsv | awk '{id=$1; url=$3; prefixDir=$5; urlDir=url; gsub(/^.+GADB\//, "GADB/", urlDir); gsub(/\/[^\/]+$/,"/",urlDir); if (urlDir != prefixDir) print id, urlDir, prefixDir}' | head
