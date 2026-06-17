@@ -8,7 +8,7 @@ time_stamp=$( date +%H-%M-%S-%d-%m-%y )
 #logFile=$( mktemp FILER_install.${time_stamp}.$$.log.XXXXXXXXXX )
 logFile="`pwd`/FILER_install.${time_stamp}.$$.log"
 # exec 3>&1 4>&2 1> >(gawk '{print (strftime("[%m/%d/%Y %H:%M:%S]", systime()) "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
-exec 3>&1 4>&2 1> >(awk '{ "date +\"[%m/%d/%Y %H:%M:%S]\"" | getline time; print (time "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
+exec 3>&1 4>&2 1> >(awk '{ "date +\"[%m/%d/%Y %H:%M:%S]\"" | getline time; print (time "\t" $0); fflush();}' | tee -i "${logFile}") 2>&1
 
 if [ $# -lt 3 ]; then
 	1>&4 echo "USAGE: $0 <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]"
@@ -132,7 +132,7 @@ echo "Found $numTracks track records in ${meta_file}"
 
 #availableSpace=$(( $(stat -f --format="%a*%S" "${TARGETDIR}") )) # in bytes
 availableSpace=$( df -k "${TARGETDIR}" | tail -n 1 | awk '{print $4*1000}' ) # in bytes
-requiredSpace=$( awk 'BEGIN{FS="\t"; fsizeCol='${fsizeCol}'+0;}{ a+=$fsizeCol; }END{ print a }' ${meta_file} ) # in bytes
+requiredSpace=$( awk 'BEGIN{FS="\t"; fsizeCol='${fsizeCol}'+0;}{ a+=$fsizeCol; }END{ print a }' "${meta_file}" ) # in bytes
 echo "Available space=${availableSpace} bytes"
 echo "Required space=${requiredSpace} bytes"
 
