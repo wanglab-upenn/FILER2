@@ -1,6 +1,6 @@
 **FILER: Functional genomics repository**
 
-FILER web server: [https://lisanwanglab.org/FILER](https://lisanwanglab.org/FILER)
+FILER web server: [https://filer2.niagads.org](https://filer2.niagads.org)
 
 This repository contains scripts that can be used to 
 
