@@ -11,8 +11,6 @@ This repository contains scripts that can be used to
 3\. to query FILER track data and metadata (see `data_querying` scripts subfolder).
 
 
-[TOC]
-
 # Deploying FILER
 
 FILER supports installation on a local server of [a full copy of all FILER tracks](#markdown-header-install-filer-data) or of [a custom subset of FILER data](#markdown-header-staging-a-custom-subset-of-the-filer-data). For steps/instructions, please see corresponding sections on deploying a full copy of FILER or deploying of a custom subset. Please also refer to the [Hardware](#markdown-header-hardware-requirements) and [Software](#markdown-header-prerequisites) sections for requirements/prerequisites for a successful installation.
