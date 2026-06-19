@@ -4,7 +4,7 @@ FILER web server: [https://filer2.niagads.org](https://filer2.niagads.org)
 
 This repository contains scripts that can be used to 
 
-1\. deploy FILER on a local server or cloud (see `install_filer.sh`); 
+1\. deploy FILER data on a local server or cloud (see `install_filer.sh`); 
 
 2\. to prepare and preprocess data for use with FILER (see `data_processing` scripts subfolder);
 
