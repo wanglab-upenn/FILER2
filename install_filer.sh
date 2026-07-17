@@ -8,16 +8,16 @@ time_stamp=$( date +%H-%M-%S-%d-%m-%y )
 #logFile=$( mktemp FILER_install.${time_stamp}.$$.log.XXXXXXXXXX )
 logFile="`pwd`/FILER_install.${time_stamp}.$$.log"
 # exec 3>&1 4>&2 1> >(gawk '{print (strftime("[%m/%d/%Y %H:%M:%S]", systime()) "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
-exec 3>&1 4>&2 1> >(awk '{ "date +\"[%m/%d/%Y %H:%M:%S]\"" | getline time; print (time "\t" $0); fflush();}' | tee -i "${logFile}") 2>&1
+exec 3>&1 4>&2 1> >(awk '{ "date +\"[%m/%d/%Y %H:%M:%S]\"" | getline time; print (time "\t" $0); fflush();}' | tee -i ${logFile}) 2>&1
 
 if [ $# -lt 3 ]; then
-	1>&4 echo "USAGE: $0 <target_annot_dir> <template_metadata_URL|template_metadata_file> <config_file> < [<force_overwrite>] [<force_continue>] [<skip_download>]"
+	1>&4 echo "USAGE: $0 <target_dir> <template_metadata_URL|template_metadata_file> <config_file> [<force_overwrite>] [<force_continue>] [<skip_download>]"
 1>&4 cat << EXAMPLE
 
 Example:
-bash install_filer.sh FILER_test https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template filer.ini
+bash install_filer.sh FILER_test_data test_metadata.hg19.template filer.ini
 where 
-1. FILER_test is the target directory for installing FILER data
+1. FILER_test_data is the target directory for installing FILER data
 2. template points to the FILER metadata template file (URL or a local file)
 with TARGETDIR placeholder.
    TARGETDIR placeholder in the template file will be replaced with the actual target directory (absolute path) to obtain a complete FILER metadata file.
@@ -29,14 +29,15 @@ EXAMPLE
 fi
 
 # input
-TARGETDIR=${1:-FILER_test}
-ANNOT_URL=${2:-https://tf.lisanwanglab.org/GADB/metadata/test.metadata.hg19.template}
-CONFIG=${3:-filer.ini}
-# miniGADB hg19: https://tf.lisanwanglab.org/GADB/metadata/metadata.latest.hg19.template
-# miniGADB hg38: https://tf.lisanwanglab.org/GADB/metadata/metadata.latest.hg38.template
-# FILER hg19: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg19.template
-# FILER hg38: https://tf.lisanwanglab.org/GADB/metadata/filer.latest.hg38.template
-# test data: https://tf.lisanwanglab.org/FILER/test_metadata.hg19.template
+TARGETDIR=${1:-"FILER_data"}
+ANNOT_URL=${2:-"https://filer2.niagads.org/metadata/filer2.test.hg38.template"}
+CONFIG=${3:-"FILER2_scripts/data/filer.homebrew.ini"}
+
+schemas=${4:-"https://filer2.niagads.org/metadata/filer2.schemas.latest.tsv"}
+
+# FILER hg19: https://filer2.niagads.org/metadata/filer2.latest.hg19.template
+# FILER hg38: https://filer2.niagads.org/metadata/filer2.latest.hg38.template
+# test data: https://filer2.niagads.org/metadata/filer2.test.hg38.template
 
 forceOverwrite=${4:-0} # set to 1 to OVERWRITE target dir/delete all data
 forceRestart=${5:-0} # set to 1 to resume download/continue within existing directory
@@ -68,6 +69,7 @@ if [ ! -x "${TABIX}" ]; then
   exit 1
 fi
 set -e
+
 echo "Using GIGGLE=${GIGGLE}"
 echo "Using TABIX=${TABIX}"
 
@@ -112,6 +114,8 @@ fi
 #meta_file_template="$TARGETDIR/metadata/${ANNOT_URL##*/}"
 meta_file_template="$ANNOTDIR/metadata/${ANNOT_URL##*/}"
 meta_file="${meta_file_template%.template}.tsv"
+local_schemas_file="${ANNOTDIR}/metadata/filer.local.schemas.tsv"
+local_config_file="${ANNOTDIR}/metadata/filer.local.config.ini"
 
 
 if ! grep -q "TARGETDIR" "${meta_file_template}"; then
@@ -132,7 +136,7 @@ echo "Found $numTracks track records in ${meta_file}"
 
 #availableSpace=$(( $(stat -f --format="%a*%S" "${TARGETDIR}") )) # in bytes
 availableSpace=$( df -k "${TARGETDIR}" | tail -n 1 | awk '{print $4*1000}' ) # in bytes
-requiredSpace=$( awk 'BEGIN{FS="\t"; fsizeCol='${fsizeCol}'+0;}{ a+=$fsizeCol; }END{ print a }' "${meta_file}" ) # in bytes
+requiredSpace=$( awk 'BEGIN{FS="\t"; fsizeCol='${fsizeCol}'+0;}{ a+=$fsizeCol; }END{ print a }' ${meta_file} ) # in bytes
 echo "Available space=${availableSpace} bytes"
 echo "Required space=${requiredSpace} bytes"
 
@@ -248,6 +252,11 @@ tail -n+2 "${meta_file}" | \
 								 print (" " ftype " " abspath)}' | \
 		xargs -L 1 "${TABIX}" -f -p
 
+cat "${config}" | envsubst > "${local_config_file}"
+wget "${schemas}" -O "${local_schemas_file}" 
+
 echo "Log file=${logFile}"
 echo "FILER root directory=${ANNOTDIR}"
 echo "FILER metadata file=${meta_file}"
+echo "FILER config file=${local_config_file}"
+echo "FILER schemas file=${local_schemas_file}"
