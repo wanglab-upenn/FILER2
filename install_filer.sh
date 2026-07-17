@@ -33,7 +33,7 @@ TARGETDIR=${1:-"FILER_data"}
 ANNOT_URL=${2:-"https://filer2.niagads.org/metadata/filer2.test.hg38.template"}
 CONFIG=${3:-"FILER2_scripts/data/filer.homebrew.ini"}
 
-schemas=${4:-"https://filer2.niagads.org/metadata/filer2.schemas.latest.tsv"}
+schemas="https://filer2.niagads.org/metadata/filer2.schemas.latest.tsv"
 
 # FILER hg19: https://filer2.niagads.org/metadata/filer2.latest.hg19.template
 # FILER hg38: https://filer2.niagads.org/metadata/filer2.latest.hg38.template
@@ -42,6 +42,16 @@ schemas=${4:-"https://filer2.niagads.org/metadata/filer2.schemas.latest.tsv"}
 forceOverwrite=${4:-0} # set to 1 to OVERWRITE target dir/delete all data
 forceRestart=${5:-0} # set to 1 to resume download/continue within existing directory
 skipDownload=${6:-0} # set to 1 to skip download and index only
+
+
+ANNOTDIR=$( cd "$TARGETDIR" && pwd ) # get absolute path for TARGET dir 
+# template and final meta files
+#meta_file_template="$TARGETDIR/metadata/${ANNOT_URL##*/}"
+meta_file_template="$ANNOTDIR/metadata/${ANNOT_URL##*/}"
+export meta_file="${meta_file_template%.template}.tsv"
+export local_schemas_file="${ANNOTDIR}/metadata/filer.local.schemas.tsv"
+export local_config_file="${ANNOTDIR}/metadata/filer.local.config.ini"
+
 
 source "${CONFIG}"
 
@@ -92,7 +102,6 @@ fi
 mkdir -p "${TARGETDIR}"
 mkdir -p "${TARGETDIR}/metadata"
 
-ANNOTDIR=$( cd "$TARGETDIR" && pwd ) # get absolute path for TARGET dir 
 
 echo "Install directory=$ANNOTDIR"
 
@@ -109,13 +118,6 @@ else
 	# local file is provided: copy it into metadata/ dir
 	cp "${ANNOT_URL}" "${TARGETDIR}/metadata/"
 fi
-
-# template and final meta files
-#meta_file_template="$TARGETDIR/metadata/${ANNOT_URL##*/}"
-meta_file_template="$ANNOTDIR/metadata/${ANNOT_URL##*/}"
-meta_file="${meta_file_template%.template}.tsv"
-local_schemas_file="${ANNOTDIR}/metadata/filer.local.schemas.tsv"
-local_config_file="${ANNOTDIR}/metadata/filer.local.config.ini"
 
 
 if ! grep -q "TARGETDIR" "${meta_file_template}"; then
@@ -252,7 +254,7 @@ tail -n+2 "${meta_file}" | \
 								 print (" " ftype " " abspath)}' | \
 		xargs -L 1 "${TABIX}" -f -p
 
-cat "${config}" | envsubst > "${local_config_file}"
+cat "${CONFIG}" | envsubst > "${local_config_file}"
 wget "${schemas}" -O "${local_schemas_file}" 
 
 echo "Log file=${logFile}"
